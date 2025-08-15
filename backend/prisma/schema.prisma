@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,9 +7,68 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum typeDay {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
 model Admin {
   id String @id @default(uuid())
   name String
   email String @unique 
   password String
+}
+
+model Property {
+  id           String      @id @default(uuid())
+  name         String      
+  canPet       Boolean     @default(false)
+  hasCoffee    Boolean     @default(false)
+  images       Image[]
+  videos       Video[]
+  surcharge    Surcharge[]
+  baseCapacity Int         @default(10)
+  rateRules    RateRule[]
+  createdAt    DateTime    @default(now())
+}
+
+model RateRule {
+  id         String   @id @default(uuid())
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+  startDate DateTime?
+  endDate   DateTime?
+  days typeDay[]
+  minGuests Int @default(1)
+  maxGuests Int @default(9999)
+  pricePerNightCents Int
+  minNights Int @default(1)
+}
+
+model Surcharge {
+  id              String   @id @default(uuid())
+  propertyId      String
+  property        Property @relation(fields: [propertyId], references: [id])
+  kind            String
+  amountCents     Int
+  appliesPerNight Boolean  @default(false)
+}
+
+model Image {
+  id         String   @id @default(uuid())
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+  idDrive    String
+}
+
+model Video {
+  id         String   @id @default(uuid())
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+  idDrive    String
 }
