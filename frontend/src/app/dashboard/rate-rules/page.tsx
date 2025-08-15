@@ -22,48 +22,50 @@ const daysOfWeek = [
   { value: "SUNDAY", label: "Domingo" },
 ]
 
-const FormSchema = z.object({
-  propertyId: z.string().min(1, "Selecione uma propriedade"),
-  startDate: z.string().optional(),
-  endDate: z.string().optional(),
-  days: z.array(z.string()),
-  minGuests: z.number().min(1, "Mínimo de hóspedes deve ser pelo menos 1"),
-  maxGuests: z.number().max(1, "Máximo de hóspedes deve ser pelo menos 1"),
-  pricePerNightCents: z.number().min(1, "Preço deve ser maior que zero"),
-  minNights: z.number().min(1, "Permanência mínima deve ser pelo menos 1 noite"),
-}).refine((data) => data.maxGuests >= data.minGuests, {
-  message: "Máximo de hóspedes deve ser maior ou igual ao mínimo",
-  path: ["maxGuests"]
-}).refine((data) => !(data.startDate && !data.endDate), {
-  message: "Se houver data de início, data de fim é obrigatória",
-  path: ["endDate"]
-}).refine((data) => !(data.startDate && data.endDate), {
-  message: "Se houver data de fim, data de início é obrigatória",
-  path: ["startDate"]
-})
+const FormSchema = z
+  .object({
+    propertyId: z.string().min(1, "Selecione uma propriedade"),
+    startDate: z.string().optional(),
+    endDate: z.string().optional(),
+    days: z.array(z.string()),
+    minGuests: z.number().min(1, "Mínimo de hóspedes deve ser pelo menos 1"),
+    maxGuests: z.number().max(1, "Máximo de hóspedes deve ser pelo menos 1"),
+    pricePerNightCents: z.number().min(1, "Preço deve ser maior que zero"),
+    minNights: z.number().min(1, "Permanência mínima deve ser pelo menos 1 noite"),
+  })
+  .refine((data) => data.maxGuests >= data.minGuests, {
+    message: "Máximo de hóspedes deve ser maior ou igual ao mínimo",
+    path: ["maxGuests"],
+  })
+  .refine((data) => !(data.startDate && !data.endDate), {
+    message: "Se houver data de início, data de fim é obrigatória",
+    path: ["endDate"],
+  })
+  .refine((data) => !(data.startDate && data.endDate), {
+    message: "Se houver data de fim, data de início é obrigatória",
+    path: ["startDate"],
+  })
 
 type FormSchema = z.infer<typeof FormSchema>
 
 const RateRules = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  
+
   const form = useForm<FormSchema>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      "propertyId": "",
-      "startDate": "",
-      "endDate": "",
-      "days": [],
+      propertyId: "",
+      startDate: "",
+      endDate: "",
+      days: [],
       minGuests: 1,
       maxGuests: 1,
       pricePerNightCents: 0,
-      minNights: 1
-    }
+      minNights: 1,
+    },
   })
 
-  const handleSubmit = async (data: FormSchema) => {
-
-  }
+  const handleSubmit = async (data: FormSchema) => {}
 
   const handleDayToggle = (dayValue: string, checked: boolean) => {
     const currentDays = form.getValues("days")
@@ -89,34 +91,6 @@ const RateRules = () => {
         <CardContent className="space-y-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-              {/* Propriedade */}
-              <FormField
-                control={form.control}
-                name="propertyId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-blue-500" />
-                      Propriedade
-                    </FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="h-11 border-gray-200 focus:border-blue-400">
-                        <SelectValue placeholder="Selecione uma propriedade" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="prop1">Casa da Praia - Guarujá</SelectItem>
-                        <SelectItem value="prop2">Chalé da Montanha - Campos do Jordão</SelectItem>
-                        <SelectItem value="prop3">Apartamento Centro - São Paulo</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormDescription className="text-xs text-gray-500">
-                      Escolha a propriedade para aplicar esta regra de preço
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               {/* Datas de vigência */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
@@ -179,20 +153,44 @@ const RateRules = () => {
                     <FormLabel className="text-sm font-medium text-gray-700 mb-3 block">
                       Dias da semana (deixe vazio para todos os dias)
                     </FormLabel>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      {daysOfWeek.map((day) => (
-                        <FormItem
-                          key={day.value}
-                          className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-gray-200 p-3"
-                        >
-                          <Checkbox
-                            checked={form.watch("days").includes(day.value)}
-                            onCheckedChange={(checked) => handleDayToggle(day.value, checked as boolean)}
-                            className="data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
-                          />
-                          <FormLabel className="text-xs font-medium text-gray-700 leading-none">{day.label}</FormLabel>
-                        </FormItem>
-                      ))}
+                    <div className="space-y-3">
+                      {/* Primeira linha: Segunda a Quinta */}
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        {daysOfWeek.slice(0, 4).map((day) => (
+                          <FormItem
+                            key={day.value}
+                            className="flex flex-row items-center space-x-3 space-y-0 rounded-md border border-gray-200 p-3"
+                          >
+                            <Checkbox
+                              checked={form.watch("days").includes(day.value)}
+                              onCheckedChange={(checked) => handleDayToggle(day.value, checked as boolean)}
+                              className="data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                            />
+                            <FormLabel className="text-xs font-medium text-gray-700 leading-none cursor-pointer">
+                              {day.label}
+                            </FormLabel>
+                          </FormItem>
+                        ))}
+                      </div>
+
+                      {/* Segunda linha: Sexta, Sábado e Domingo ocupando toda largura */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        {daysOfWeek.slice(4).map((day) => (
+                          <FormItem
+                            key={day.value}
+                            className="flex flex-row items-center space-x-3 space-y-0 rounded-md border border-gray-200 p-3"
+                          >
+                            <Checkbox
+                              checked={form.watch("days").includes(day.value)}
+                              onCheckedChange={(checked) => handleDayToggle(day.value, checked as boolean)}
+                              className="data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                            />
+                            <FormLabel className="text-xs font-medium text-gray-700 leading-none cursor-pointer">
+                              {day.label}
+                            </FormLabel>
+                          </FormItem>
+                        ))}
+                      </div>
                     </div>
                     <FormDescription className="text-xs text-gray-500">
                       Selecione os dias em que esta regra se aplica
@@ -251,29 +249,27 @@ const RateRules = () => {
                 />
               </div>
 
-              {/* Preço e permanência mínima */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Propriedade e Permanência mínima */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
                 <FormField
                   control={form.control}
-                  name="pricePerNightCents"
+                  name="propertyId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                        <DollarSign className="h-4 w-4 text-green-600" />
-                        Preço por noite (R$)
+                      <FormLabel className="text-sm font-medium text-gray-700 flex items-center gap-2 h-5">
+                        <MapPin className="h-4 w-4 text-blue-500" />
+                        Propriedade
                       </FormLabel>
-                      <Input
-                        type="number"
-                        min={1}
-                        step={0.01}
-                        placeholder="100.00"
-                        className="h-11 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20"
-                        value={field.value / 100}
-                        onChange={(e) => field.onChange(Math.round((Number.parseFloat(e.target.value) || 0) * 100))}
-                        onBlur={field.onBlur}
-                        name={field.name}
-                      />
-                      <FormDescription className="text-xs text-gray-500">Valor em reais por noite</FormDescription>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger className="w-full h-11 border-gray-200 focus:border-blue-400">
+                          <SelectValue placeholder="Selecione uma propriedade" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="prop1">Casa da Praia - Guarujá</SelectItem>
+                          <SelectItem value="prop2">Chalé da Montanha - Campos do Jordão</SelectItem>
+                          <SelectItem value="prop3">Apartamento Centro - São Paulo</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -284,7 +280,7 @@ const RateRules = () => {
                   name="minNights"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                      <FormLabel className="text-sm font-medium text-gray-700 flex items-center gap-2 h-5">
                         <Clock className="h-4 w-4 text-purple-500" />
                         Permanência mínima (noites)
                       </FormLabel>
@@ -305,6 +301,33 @@ const RateRules = () => {
                   )}
                 />
               </div>
+
+              {/* Preço por noite ocupando toda largura */}
+              <FormField
+                control={form.control}
+                name="pricePerNightCents"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                      <DollarSign className="h-4 w-4 text-green-600" />
+                      Preço por noite (R$)
+                    </FormLabel>
+                    <Input
+                      type="number"
+                      min={1}
+                      step={0.01}
+                      placeholder="100.00"
+                      className="h-11 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20"
+                      value={field.value / 100}
+                      onChange={(e) => field.onChange(Math.round((Number.parseFloat(e.target.value) || 0) * 100))}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                    />
+                    <FormDescription className="text-xs text-gray-500">Valor em reais por noite</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               {/* Botão de submit */}
               <Button
