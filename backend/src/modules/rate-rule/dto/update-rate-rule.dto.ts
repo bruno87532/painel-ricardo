@@ -1,4 +1,4 @@
-import { IsString, IsDefined, IsNotEmpty, MinLength, IsDate, IsArray, ArrayNotEmpty, ArrayUnique, IsEnum, IsNumber, Min, IsOptional } from "class-validator";
+import { IsString, MinLength, IsDate, IsArray, ArrayNotEmpty, ArrayUnique, IsEnum, IsNumber, Min, IsOptional } from "class-validator";
 import { Transform, Type } from "class-transformer";
 
 enum WeekDay {
@@ -14,7 +14,6 @@ enum WeekDay {
 export class UpdateRateRuleDto {
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   @MinLength(1)
   propertyId: string
 
@@ -33,32 +32,32 @@ export class UpdateRateRuleDto {
   @IsDate()
   endDate: Date
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsArray()
   @ArrayNotEmpty()
   @ArrayUnique()
   @IsEnum(WeekDay, { each: true })
   days: WeekDay[]
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   @Type(() => Number)
   @Min(1)
   minGuests: number
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   @Type(() => Number)
   @Min(1)
   maxGuests: number
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   @Type(() => Number)
   @Min(1)
   pricePerNightCents: number
-
-  @IsNotEmpty()
+  
+  @IsOptional()
   @IsNumber()
   @Type(() => Number)
   @Min(1)
