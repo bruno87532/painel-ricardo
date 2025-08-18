@@ -1,13 +1,12 @@
 import { HttpException, Injectable, InternalServerErrorException, NotFoundException, Param } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import { CreatePropertyDto } from "./dto/create-property.dto";
-import { UpdatePropertyDto } from "./dto/update-property.dto";
+import { CreateUpdatePropertyDto } from "./dto/create-update-property.dto";
 
 @Injectable()
 export class PropertyService {
   constructor(private readonly prismaService: PrismaService) { }
 
-  async createProperty(data: CreatePropertyDto) {
+  async createProperty(data: CreateUpdatePropertyDto) {
     try {
       const property = await this.prismaService.property.create({
         data
@@ -34,7 +33,7 @@ export class PropertyService {
     }
   }
 
-  async updatePropertieById(id: string, data: UpdatePropertyDto) {
+  async updatePropertieById(id: string, data: CreateUpdatePropertyDto) {
     try {
       const property = await this.prismaService.property.update({
         where: { id },
@@ -58,6 +57,22 @@ export class PropertyService {
     } catch (error) {
       console.error("An error ocurred while deleting property with id", id, error)
       throw new InternalServerErrorException("An error ocurred while deleting property with id")
+    }
+  }
+
+  async getPropertyById(id: string) {
+    try {
+      const property = await this.prismaService.property.findUnique({
+        where: { id }
+      })
+
+      if (!property) throw new NotFoundException("Property not found")
+
+      return property
+    } catch (error) {
+      if (error instanceof HttpException) throw error
+      console.error("An error ocurred while fetching property by id", id, error)
+      throw new InternalServerErrorException("An error ocurred while fetching property by id")
     }
   }
 }

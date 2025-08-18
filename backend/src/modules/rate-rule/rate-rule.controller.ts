@@ -1,7 +1,6 @@
-import { Controller, UsePipes, ValidationPipe, Post, Get, Patch, Param, Body, Delete } from "@nestjs/common";
+import { Controller, UsePipes, ValidationPipe, Post, Get, Put, Param, Body, Delete } from "@nestjs/common";
 import { RateRuleService } from "./rate-rule.service";
-import { CreateRateRuleDto } from "./dto/create-rate-rule.dto";
-import { UpdateRateRuleDto } from "./dto/update-rate-rule.dto";
+import { CreateUpdateRateRuleDto } from "./dto/create-update-rate-rule.dto";
 
 @Controller("rate-rule")
 export class RateRuleController {
@@ -9,7 +8,7 @@ export class RateRuleController {
 
   @Post()
   @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
-  async createRateRule(@Body() data: CreateRateRuleDto) {
+  async createRateRule(@Body() data: CreateUpdateRateRuleDto) {
     return await this.rateRuleService.createRateRule(data)
   }
 
@@ -18,9 +17,14 @@ export class RateRuleController {
     return await this.rateRuleService.getRateRules()
   }
 
-  @Patch("/:id")
+  @Get("/:id")
+  async getRateRuleById(@Param("id") id: string) {
+    return await this.rateRuleService.getRateRuleById(id)
+  }
+
+  @Put("/:id")
   @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
-  async updateRateRuleById(@Body() data: UpdateRateRuleDto, @Param("id") id: string) {
+  async updateRateRuleById(@Body() data: CreateUpdateRateRuleDto, @Param("id") id: string) {
     return await this.rateRuleService.updateRateRuleById(id, data)
   }
 

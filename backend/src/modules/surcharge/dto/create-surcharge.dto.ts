@@ -1,5 +1,15 @@
-import { IsString, IsNotEmpty, IsDefined, IsBoolean, IsNumber, MinLength, Min, isDefined } from "class-validator"
+import { IsString, IsNotEmpty, IsDefined, IsBoolean, IsNumber, MinLength, Min, IsArray, ArrayNotEmpty, IsEnum, ArrayUnique, IsOptional, IsDate } from "class-validator"
 import { Transform, Type } from "class-transformer"
+
+enum WeekDay {
+  MONDAY = "MONDAY",
+  TUESDAY = "TUESDAY",
+  WEDNESDAY = "WEDNESDAY",
+  THURSDAY = "THURSDAY",
+  FRIDAY = "FRIDAY",
+  SATURDAY = "SATURDAY",
+  SUNDAY = "SUNDAY"
+}
 
 export class CreateSurchargeDto {
   @IsString()
@@ -26,4 +36,24 @@ export class CreateSurchargeDto {
   })
   @IsBoolean()
   appliesPerNight: boolean
+
+  @IsArray()
+  @ArrayNotEmpty()
+  @ArrayUnique()
+  @IsEnum(WeekDay, { each: true })
+  days: WeekDay[]
+
+  @IsOptional()
+  @Transform(({ value }) => {
+    return new Date(value)
+  })
+  @IsDate()
+  startDate: Date
+
+  @IsOptional()
+  @Transform(({ value }) => {
+    return new Date(value)
+  })
+  @IsDate()
+  endDate: Date
 }

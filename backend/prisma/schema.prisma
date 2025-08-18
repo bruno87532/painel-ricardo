@@ -18,15 +18,15 @@ enum typeDay {
 }
 
 model Admin {
-  id String @id @default(uuid())
-  name String
-  email String @unique 
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
   password String
 }
 
 model Property {
   id           String      @id @default(uuid())
-  name         String      
+  name         String
   canPet       Boolean     @default(false)
   hasCoffee    Boolean     @default(false)
   images       Image[]
@@ -38,25 +38,28 @@ model Property {
 }
 
 model RateRule {
-  id         String   @id @default(uuid())
-  propertyId String
-  property   Property @relation(fields: [propertyId], references: [id])
-  startDate DateTime?
-  endDate   DateTime?
-  days typeDay[]
-  minGuests Int @default(1)
-  maxGuests Int @default(9999)
+  id                 String    @id @default(uuid())
+  propertyId         String
+  property           Property  @relation(fields: [propertyId], references: [id])
+  startDate          DateTime?
+  endDate            DateTime?
+  days               typeDay[]
+  minGuests          Int       @default(1)
+  maxGuests          Int       @default(9999)
   pricePerNightCents Int
-  minNights Int @default(1)
+  minNights          Int       @default(1)
 }
 
 model Surcharge {
-  id              String   @id @default(uuid())
+  id              String    @id @default(uuid())
   propertyId      String
-  property        Property @relation(fields: [propertyId], references: [id])
+  property        Property  @relation(fields: [propertyId], references: [id])
+  days            typeDay[]
+  startDate       DateTime?
+  endDate         DateTime?
   kind            String
   amountCents     Int
-  appliesPerNight Boolean  @default(false)
+  appliesPerNight Boolean   @default(false)
 }
 
 model Image {

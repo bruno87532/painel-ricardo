@@ -60,4 +60,20 @@ export class SurchargeService {
       throw new InternalServerErrorException("An error ocurred while deleting surcharge with id")
     }
   }
+
+  async getSurchargeById(id: string) {
+    try {
+      const surcharge = await this.prismaService.surcharge.findUnique({
+        where: { id }
+      })
+
+      if (!surcharge) throw new NotFoundException("Surcharge not found")
+
+      return surcharge
+    } catch (error) {
+      if (error instanceof HttpException) throw error
+      console.error("An error ocurred while fetching surcharge with id", id, error)
+      throw new InternalServerErrorException("An error ocurred while fetching surcharge with id")
+    }
+  }
 }

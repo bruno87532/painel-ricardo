@@ -1,7 +1,6 @@
-import { Controller, Post, UsePipes, ValidationPipe, Body, Patch, Get, Param, Delete } from "@nestjs/common";
+import { Controller, Post, UsePipes, ValidationPipe, Body, Put, Get, Param, Delete } from "@nestjs/common";
 import { PropertyService } from "./property.service";
-import { CreatePropertyDto } from "./dto/create-property.dto";
-import { UpdatePropertyDto } from "./dto/update-property.dto";
+import { CreateUpdatePropertyDto } from "./dto/create-update-property.dto";
 
 @Controller("property")
 export class PropertyController {
@@ -9,19 +8,24 @@ export class PropertyController {
 
   @Post()
   @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
-  async createPropertty(@Body() data: CreatePropertyDto) {
+  async createPropertty(@Body() data: CreateUpdatePropertyDto) {
     return await this.propertyService.createProperty(data)
   }
 
-  @Patch("/:id")
+  @Put("/:id")
   @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
-  async updateProperty(@Body() data: UpdatePropertyDto, @Param("id") id: string) {
+  async updatePropertyById(@Body() data: CreateUpdatePropertyDto, @Param("id") id: string) {
     return await this.propertyService.updatePropertieById(id, data)    
   }
 
   @Get()
   async getProperties() {
     return await this.propertyService.getProperties()
+  }
+
+  @Get("/:id")
+  async getPropertyById(@Param("id") id: string) {
+    return await this.propertyService.getPropertyById(id)
   }
 
   @Delete("/:id")

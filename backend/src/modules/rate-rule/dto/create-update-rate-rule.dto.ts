@@ -1,4 +1,4 @@
-import { IsString, IsDefined, IsNotEmpty, MinLength, IsDate, IsArray, IsIn, ArrayNotEmpty, ArrayUnique, IsEnum, IsNumber, Min } from "class-validator";
+import { IsString, IsDefined, IsNotEmpty, MinLength, IsDate, IsArray, IsIn, ArrayNotEmpty, ArrayUnique, IsEnum, IsNumber, Min, IsOptional } from "class-validator";
 import { Transform, Type } from "class-transformer";
 
 enum WeekDay {
@@ -11,25 +11,24 @@ enum WeekDay {
   SUNDAY = "SUNDAY"
 }
 
-export class CreateRateRuleDto {
+export class CreateUpdateRateRuleDto {
   @IsString()
   @IsDefined()
   @IsNotEmpty()
   @MinLength(1)
   propertyId: string
 
-
+  @IsOptional()
   @Transform(({ value }) => {
     return new Date(value)
   })
-  @IsDefined()
   @IsDate()
   startDate: Date
 
+  @IsOptional()
   @Transform(({ value }) => {
     return new Date(value)
   })
-  @IsDefined()
   @IsDate()
   endDate: Date
 

@@ -2,8 +2,8 @@
 
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { property, z } from "zod"
-import { useState } from "react"
+import { z } from "zod"
+import { useState, useEffect } from "react"
 import { Form, FormField, FormItem, FormMessage, FormLabel, FormDescription } from "@/components/ui/form"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -11,6 +11,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { MapPin, DollarSign, BadgePercent, CalendarCheck, Calendar, Loader2 } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
+import { PropertyService } from "../../../../services/property.service"
 
 const surchargeKinds = [
   { value: "CLEANING_FEE", label: "Taxa de Limpeza" },
@@ -42,9 +43,23 @@ const FormSchema = z.object({
 
 type FormSchema = z.infer<typeof FormSchema>
 
+
 const Surcharge = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
-
+  const [properties, setProperties] = useState<{
+    id: string;
+    name: string;
+  }[]>([])
+  
+  useEffect(() => {
+    const getProperties = async () => {
+      const propertiesDb = await PropertyService.getProperties()
+      setProperties(propertiesDb)
+    }
+  
+    getProperties()
+  }, [])
+  
   const form = useForm<FormSchema>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -90,7 +105,7 @@ const Surcharge = () => {
       <Card className="w-full max-w-2xl shadow-xl border-0 bg-white/80 backdrop-blur-sm">
         <CardHeader className="space-y-2 text-center pb-8">
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Cadastro de Taxas (Surcharge)
+            Cadastro de Taxas
           </CardTitle>
         </CardHeader>
 
@@ -113,9 +128,11 @@ const Surcharge = () => {
                           <SelectValue placeholder="Selecione uma propriedade" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="prop1">Casa da Praia - Guarujá</SelectItem>
-                          <SelectItem value="prop2">Chalé da Montanha - Campos do Jordão</SelectItem>
-                          <SelectItem value="prop3">Apartamento Centro - São Paulo</SelectItem>
+                          {
+                            properties.map((property) => (
+                              <SelectItem value={property.id}>{property.name}</SelectItem>
+                            ))
+                          }
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -271,7 +288,7 @@ const Surcharge = () => {
                     Cadastrando taxa...
                   </>
                 ) : (
-                  "Cadastrar Taxa (Surcharge)"
+                  "Cadastrar Taxa"
                 )}
               </Button>
             </form>

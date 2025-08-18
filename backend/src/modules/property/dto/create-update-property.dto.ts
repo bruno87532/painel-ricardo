@@ -1,25 +1,26 @@
-import { IsString, IsBoolean, IsOptional, MinLength, Min, IsNumber } from "class-validator"
+import { IsString, IsDefined, IsBoolean, IsNotEmpty, MinLength, Min, IsNumber } from "class-validator"
 import { Type, Transform } from "class-transformer"
 
-export class UpdatePropertyDto {
-  @IsOptional()
+export class CreateUpdatePropertyDto {
   @IsString()
+  @IsDefined()
+  @IsNotEmpty()
   @MinLength(3)
   name: string
 
-  @IsOptional()
+  @IsDefined()
   @Transform(({ value }) => value === "true" || value === true)
   @IsBoolean()
   canPet: boolean
 
-  @IsOptional()
+  @IsDefined()
   @Transform(({ value }) => value === "true" || value === true)
   @IsBoolean()
   hasCoffee: boolean
 
-  @IsOptional()
   @IsNumber()
   @Type(() => Number)
+  @IsDefined()
   @Min(1)
   baseCapacity: number
 }
