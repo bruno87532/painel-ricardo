@@ -1,4 +1,4 @@
-import { Controller, UsePipes, ValidationPipe, Post, Get, Put, Param, Body, Delete } from "@nestjs/common";
+import { Controller, UsePipes, ValidationPipe, Post, Get, Put, Param, Body, Delete, Query } from "@nestjs/common";
 import { RateRuleService } from "./rate-rule.service";
 import { CreateUpdateRateRuleDto } from "./dto/create-update-rate-rule.dto";
 
@@ -13,8 +13,8 @@ export class RateRuleController {
   }
 
   @Get() 
-  async getRateRules() {
-    return await this.rateRuleService.getRateRules()
+  async getRateRules(@Query("page") page: number) {
+    return await this.rateRuleService.getRateRules(page)
   }
 
   @Get("/:id")

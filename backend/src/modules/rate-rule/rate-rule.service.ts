@@ -33,13 +33,22 @@ export class RateRuleService {
     }
   }
 
-  async getRateRules() {
+  async getRateRules(page: number) {
     try {
-      const rateRules = await this.prismaService.rateRule.findMany({})
-
+      
+      const limit = 10
+      const quantity = await this.prismaService.rateRule.count()
+      const rateRules = await this.prismaService.rateRule.findMany({
+        skip: (page - 1) * limit,
+        take: limit
+      })
+      
       if (!rateRules) throw new NotFoundException("rateRule not found")
 
-      return rateRules
+      return {
+        rateRules,
+        hasNext: quantity > page * limit 
+      }
     } catch (error) {
       if (error instanceof HttpException) throw error
       console.error("An error ocurred while fetching rateRules", error)
@@ -52,7 +61,7 @@ export class RateRuleService {
       const rateRule = await this.prismaService.rateRule.findUnique({
         where: { id }
       })
-      console.log(rateRule)
+
       if (!rateRule) throw new BadRequestException("rateRule not found")
 
       return rateRule

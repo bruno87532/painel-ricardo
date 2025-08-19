@@ -27,12 +27,11 @@ model Admin {
 model Property {
   id           String      @id @default(uuid())
   name         String
-  canPet       Boolean     @default(false)
-  hasCoffee    Boolean     @default(false)
   images       Image[]
   videos       Video[]
   surcharge    Surcharge[]
   baseCapacity Int         @default(10)
+  maxCapacity  Int  @default(10)
   rateRules    RateRule[]
   createdAt    DateTime    @default(now())
 }
@@ -60,7 +59,7 @@ model Surcharge {
   startDate       DateTime?
   endDate         DateTime?
   amountCents     Int
-  appliesPerNight Boolean   @default(false)
+  appliesPerNight Boolean       @default(false)
 }
 
 model SurchargeType {

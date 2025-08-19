@@ -1,5 +1,6 @@
 import axios from "axios";
 import { WeekDays } from "../types/week-days";
+import { RateRule } from "../types/rate-rule";
 
 export class RateRuleService {
   private static pathBackend = process.env.NEXT_PUBLIC_BACKEND
@@ -45,7 +46,6 @@ export class RateRuleService {
   }
 
   static async getRateRuleById(id: string) {
-    console.log("executou várias vezes")
     const rateRule = await axios.get(this.pathBackend + "/rate-rule/" + id, {
       headers: {
         "Content-Type": "application/json"
@@ -55,8 +55,11 @@ export class RateRuleService {
     return rateRule.data
   }
 
-  static async getRateRules() {
-    const rateRules = await axios.get(this.pathBackend + "/rate-rule", {
+  static async getRateRules(page: number): Promise<{
+    rateRules: RateRule[],
+    hasNext: boolean
+  }> {
+    const rateRules = await axios.get(this.pathBackend + "/rate-rule?page=" + page, {
       headers: {
         "Content-Type": "application/json"
       },

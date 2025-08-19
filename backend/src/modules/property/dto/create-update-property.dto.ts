@@ -8,19 +8,15 @@ export class CreateUpdatePropertyDto {
   @MinLength(3)
   name: string
 
-  @IsDefined()
-  @Transform(({ value }) => value === "true" || value === true)
-  @IsBoolean()
-  canPet: boolean
-
-  @IsDefined()
-  @Transform(({ value }) => value === "true" || value === true)
-  @IsBoolean()
-  hasCoffee: boolean
-
   @IsNumber()
   @Type(() => Number)
   @IsDefined()
   @Min(1)
   baseCapacity: number
+
+  @IsNumber()
+  @Type(() => Number)
+  @IsDefined()
+  @Min(1)
+  maxCapacity: number
 }

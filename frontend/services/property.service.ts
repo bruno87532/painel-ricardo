@@ -1,5 +1,5 @@
 import axios from "axios"
-import { ApiError } from "../types/api-error"
+import type { Property } from "../types/property"
 
 export class PropertyService {
   private static pathBackend = process.env.NEXT_PUBLIC_BACKEND
@@ -73,5 +73,16 @@ export class PropertyService {
     })
 
     return property.data
+  }
+
+  static async getPropertiesByIds(data: { ids: string[] }): Promise<Property[]> {
+    const properties = await axios.post(this.pathBackend + "/property/ids", data, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      withCredentials: true
+    })
+
+    return properties.data
   }
 }

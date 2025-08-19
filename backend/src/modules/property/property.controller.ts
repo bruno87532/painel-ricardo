@@ -1,6 +1,7 @@
-import { Controller, Post, UsePipes, ValidationPipe, Body, Put, Get, Param, Delete } from "@nestjs/common";
+import { Controller, Post, UsePipes, ValidationPipe, Body, Put, Get, Param, Delete, HttpCode, HttpStatus } from "@nestjs/common";
 import { PropertyService } from "./property.service";
 import { CreateUpdatePropertyDto } from "./dto/create-update-property.dto";
+import { GetPropertiesByIdsDto } from "./dto/get-properties-by-ids.dto";
 
 @Controller("property")
 export class PropertyController {
@@ -31,5 +32,12 @@ export class PropertyController {
   @Delete("/:id")
   async deleteProperty(@Param("id") id: string) {
     return await this.propertyService.deletePropertyById(id)
+  }
+
+  @Post("/ids")
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
+  async getPropertiesByIds(@Body() data: GetPropertiesByIdsDto) {
+    return await this.propertyService.getPropertiesByIds(data)
   }
 }

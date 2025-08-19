@@ -1,6 +1,7 @@
 import { HttpException, Injectable, InternalServerErrorException, NotFoundException, Param } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateUpdatePropertyDto } from "./dto/create-update-property.dto";
+import { GetPropertiesByIdsDto } from "./dto/get-properties-by-ids.dto";
 
 @Injectable()
 export class PropertyService {
@@ -73,6 +74,26 @@ export class PropertyService {
       if (error instanceof HttpException) throw error
       console.error("An error ocurred while fetching property by id", id, error)
       throw new InternalServerErrorException("An error ocurred while fetching property by id")
+    }
+  }
+
+  async getPropertiesByIds(data: GetPropertiesByIdsDto) {
+    try {
+      const properties = await this.prismaService.property.findMany({
+        where: {
+          id: {
+            in: data.ids
+          }
+        }
+      })
+
+      if (!properties) throw new NotFoundException("property not found")
+
+      return properties
+    } catch (error) {
+      if (error instanceof HttpException) throw error
+      console.error("An error ocurred while fetching properties with ids", data.ids, error)
+      throw new InternalServerErrorException("An error ocurred while fetching properties with ids")
     }
   }
 }
