@@ -32,7 +32,7 @@ export const Menu: React.FC<{
                       setVisibleItems(10)
                     }}
                     className={`
-                        flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors
+                        flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer
                         ${isActive ? "bg-blue-100 text-blue-700" : "text-gray-600 hover:bg-gray-100 hover:text-gray-800"
                       }
                       `}

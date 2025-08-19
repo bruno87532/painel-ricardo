@@ -8,8 +8,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Sidebar } from "./components/sidebar/sidebar"
 import { RuleCard } from "./components/rule-card/rule-card"
 import { Menu as MenuPage } from "./components/menu/menu"
-import { Building2, DollarSign, Receipt, Menu } from "lucide-react"
+import { Building2, DollarSign, Receipt, Menu, DollarSignIcon } from "lucide-react"
 import { PropertyCard } from "./components/property/property"
+import { NewTaxes } from "./components/new-taxes/new-taxes"
 
 const PricingDashboard = () => {
   const [activeTab, setActiveTab] = useState<TabType>("properties")
@@ -26,23 +27,18 @@ const PricingDashboard = () => {
         return "Regras de Preço"
       case "taxes":
         return "Taxas"
+      case "new-taxes":
+        return "Nova Taxa"
       default:
         return ""
     }
-  }
-
-  const loadMore = () => {
-    setVisibleItems((prev) => prev + 10)
-  }
-
-  const handleDelete = (id: number) => {
-    console.log("Deleting item:", id, "from", activeTab)
   }
 
   const sidebarItems = [
     { id: "properties", label: "Propriedades", icon: Building2 },
     { id: "rules", label: "Regras de Preço", icon: DollarSign },
     { id: "taxes", label: "Taxas", icon: Receipt },
+    { id: "new-taxes", label: "Tipos de Taxas", icon: DollarSignIcon }
   ]
 
   return (
@@ -92,6 +88,7 @@ const PricingDashboard = () => {
             <RuleCard />
           )}
           {activeTab === "taxes" && <TaxCard />}
+          { activeTab === "new-taxes" && <NewTaxes />  }
         </div>
       </div>
 

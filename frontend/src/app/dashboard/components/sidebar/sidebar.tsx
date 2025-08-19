@@ -49,7 +49,7 @@ export const Sidebar: React.FC<{
                     setSidebarOpen(false)
                   }}
                   className={`
-                    w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors
+                    w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors cursor-pointer
                     ${isActive ? "bg-blue-100 text-blue-700 font-medium" : "text-gray-600 hover:bg-gray-100"}
                   `}
                 >

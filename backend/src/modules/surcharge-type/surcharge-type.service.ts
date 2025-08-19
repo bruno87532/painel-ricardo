@@ -5,7 +5,7 @@ import { SurchargeService } from "../surcharge/surcharge.service";
 
 @Injectable()
 export class SurchargeTypeService {
-  constructor (
+  constructor(
     private readonly prismaService: PrismaService,
     private readonly surchargeService: SurchargeService
   ) { }
@@ -38,8 +38,8 @@ export class SurchargeTypeService {
   }
 
   async getSurchargeTypes() {
-    try { 
-      const surchargeTypes = await this.prismaService.surchargeType.findMany({}) 
+    try {
+      const surchargeTypes = await this.prismaService.surchargeType.findMany({})
 
       if (surchargeTypes.length === 0) throw new NotFoundException("surchargeTypes not found")
 
@@ -48,6 +48,21 @@ export class SurchargeTypeService {
       if (error instanceof HttpException) throw error
       console.error("An error ocurred while fetching surchargeTypes", error)
       throw new InternalServerErrorException("An error ocurred while fetching surchargeTypes")
+    }
+  }
+
+  async getSurchargeTypeById(id: string) {
+    try {
+      const surchargeType = await this.prismaService.surchargeType.findUnique({
+        where: { id }
+      })
+      if (!surchargeType) throw new NotFoundException("surchargeType not found")
+
+      return surchargeType
+    } catch (error) {
+      if (error instanceof HttpException) throw error
+      console.error("An error ocurred while fetching surchargeType with id", id, error)
+      throw new InternalServerErrorException("An error ocurred while fetching surchargeType with id")
     }
   }
 

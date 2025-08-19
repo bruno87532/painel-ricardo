@@ -1,1 +1,1 @@
-export type TabType = "properties" | "rules" | "taxes"
+export type TabType = "properties" | "rules" | "taxes" | "new-taxes"

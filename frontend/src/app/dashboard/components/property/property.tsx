@@ -12,6 +12,8 @@ import {
   AlertDialogTitle,
   AlertDialogAction
 } from "@/components/ui/alert-dialog"
+import { useEffect } from "react"
+import { PropertyService } from "@/../services/property.service"
 
 export const PropertyCard = () => {
   const mockProperties = [
@@ -35,6 +37,12 @@ export const PropertyCard = () => {
       </div>
     )
   }
+
+  useEffect(() => {
+    const getProperties = async () => {
+      const properties = await PropertyService.getProperties()
+    }
+  }, [])
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
@@ -64,7 +72,7 @@ export const PropertyCard = () => {
               <Button
                 size="sm"
                 variant="outline"
-                className="flex-1 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 hover:text-blue-800"
+                className="flex-1 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 hover:text-blue-800 cursor-pointer"
               >
                 <Edit className="h-3 w-3 mr-1" />
                 Editar
@@ -75,7 +83,7 @@ export const PropertyCard = () => {
                   <Button
                     size="sm"
                     variant="outline"
-                    className="flex-1 bg-red-50 hover:bg-red-100 border-red-200 text-red-700 hover:text-red-800"
+                    className="flex-1 bg-red-50 hover:bg-red-100 border-red-200 text-red-700 hover:text-red-800 cursor-pointer"
                   >
                     <Trash2 className="h-3 w-3 mr-1" />
                     Excluir

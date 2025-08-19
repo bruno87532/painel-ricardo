@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button"
 import { PropertyService } from "../../../../services/property.service"
 import { SurchargeService } from "../../../../services/surcharge.service"
 import { WeekDay, WeekDays } from "../../../../types/week-days"
+import { SurchargeTypeService } from "../../../../services/surcharge-type.service"
 
 const surchargeKinds = [
   { value: "CLEANING_FEE", label: "Taxa de Limpeza" },
@@ -55,11 +56,20 @@ const Surcharge = () => {
     id: string;
     name: string;
   }[]>([])
+  const [surchargeTypes, setSurchargeTypes] = useState<{
+    id: string;
+    name: string
+  }[]>([])
 
   useEffect(() => {
     const getProperties = async () => {
       const propertiesDb = await PropertyService.getProperties()
       setProperties(propertiesDb)
+    }
+
+    const getSurchargeTypes = async () => {
+      const surchargeTypes = await SurchargeTypeService.getSurchargeTypes()
+      setSurchargeTypes(surchargeTypes)
     }
 
     getProperties()

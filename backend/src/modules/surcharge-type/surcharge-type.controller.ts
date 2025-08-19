@@ -12,7 +12,12 @@ export class SurchargeTypeController {
     return await this.surchargeTypeService.createSurchargeType(data)
   }
 
-  @Put()
+  @Get("/:id")
+  async getSurchargeTypeById(@Param("id") id: string) {
+    return await this.surchargeTypeService.getSurchargeTypeById(id)
+  }
+
+  @Put("/:id")
   @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
   async updateSurchargeType(@Body() data: CreateUpdateSurchargeTypeDto, @Param("id") id: string) {
     return await this.surchargeTypeService.updateSurchargeType(id, data)
@@ -23,7 +28,7 @@ export class SurchargeTypeController {
     return await this.surchargeTypeService.getSurchargeTypes()
   }
 
-  @Delete()
+  @Delete("/:id")
   async deleteSurchargeType(@Param("id") id: string) {
     return await this.surchargeTypeService.deleteSurchargeType(id)
   }

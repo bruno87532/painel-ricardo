@@ -12,7 +12,6 @@ import { toast } from "sonner"
 import { PropertyService } from "@/../services/property.service"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
-import { NewSurcharge } from "./components/new-surcharge/new-surcharge"
 
 const propertySchema = z.object({
   name: z.string().min(1, "Nome da propriedade é obrigatório"),
@@ -185,7 +184,6 @@ export const Property: React.FC<{
                     )}
                   />
                 ))}
-                <NewSurcharge />
 
                 <Button
                   type="submit"
