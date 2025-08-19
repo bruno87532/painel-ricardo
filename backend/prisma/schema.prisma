@@ -51,15 +51,22 @@ model RateRule {
 }
 
 model Surcharge {
-  id              String    @id @default(uuid())
+  id              String        @id @default(uuid())
   propertyId      String
-  property        Property  @relation(fields: [propertyId], references: [id])
+  property        Property      @relation(fields: [propertyId], references: [id])
+  surchargeTypeId String
+  surchargeType   SurchargeType @relation(fields: [surchargeTypeId], references: [id])
   days            typeDay[]
   startDate       DateTime?
   endDate         DateTime?
-  kind            String
   amountCents     Int
   appliesPerNight Boolean   @default(false)
+}
+
+model SurchargeType {
+  id        String      @id @default(uuid())
+  name      String
+  Surcharge Surcharge[]
 }
 
 model Image {

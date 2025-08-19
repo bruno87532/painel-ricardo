@@ -12,6 +12,8 @@ import { MapPin, DollarSign, BadgePercent, CalendarCheck, Calendar, Loader2 } fr
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { PropertyService } from "../../../../services/property.service"
+import { SurchargeService } from "../../../../services/surcharge.service"
+import { WeekDay, WeekDays } from "../../../../types/week-days"
 
 const surchargeKinds = [
   { value: "CLEANING_FEE", label: "Taxa de Limpeza" },
@@ -23,7 +25,10 @@ const surchargeKinds = [
 ]
 
 
-const daysOfWeek = [
+const daysOfWeek: {
+  value: WeekDays,
+  label: string,
+}[] = [
   { value: "MONDAY", label: "Segunda-feira" },
   { value: "TUESDAY", label: "Terça-feira" },
   { value: "WEDNESDAY", label: "Quarta-feira" },
@@ -35,9 +40,9 @@ const daysOfWeek = [
 
 const FormSchema = z.object({
   propertyId: z.string().min(1, "Selecione uma propriedade"),
+  days: z.array(z.enum(WeekDay)),
   kind: z.string().min(1, "Selecione o tipo de taxa"),
   amountCents: z.number().min(1, "Valor deve ser maior que zero"),
-  validDays: z.array(z.string()).min(1, "Selecione pelo menos um dia da semana"),
   appliesPerNight: z.boolean()
 })
 
@@ -50,55 +55,35 @@ const Surcharge = () => {
     id: string;
     name: string;
   }[]>([])
-  
+
   useEffect(() => {
     const getProperties = async () => {
       const propertiesDb = await PropertyService.getProperties()
       setProperties(propertiesDb)
     }
-  
+
     getProperties()
   }, [])
-  
+
   const form = useForm<FormSchema>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       propertyId: "",
       kind: "",
       amountCents: 0,
-      validDays: [],
+      days: [],
       appliesPerNight: false,
     },
   })
-  
-  const handleDayToggle = (dayValue: string, checked: boolean) => {
-    const currentDays = form.getValues("validDays")
-    if (checked) {
-      form.setValue("validDays", [...currentDays, dayValue])
-    } else {
-      form.setValue(
-        "validDays",
-        currentDays.filter((day) => day !== dayValue),
-      )
-    }
-  }
+
   const handleSubmit = async (data: FormSchema) => {
+    await SurchargeService.createSurcharge(data)
     setIsLoading(true)
     // Simular envio
     await new Promise((resolve) => setTimeout(resolve, 2000))
     console.log("Surcharge data:", data)
     setIsLoading(false)
   }
-
-  const weekdays = [
-    { id: "monday", label: "Segunda-feira", short: "Segunda" },
-    { id: "tuesday", label: "Terça-feira", short: "Terça" },
-    { id: "wednesday", label: "Quarta-feira", short: "Quarta" },
-    { id: "thursday", label: "Quinta-feira", short: "Quinta" },
-    { id: "friday", label: "Sexta-feira", short: "Sexta" },
-    { id: "saturday", label: "Sábado", short: "Sábado" },
-    { id: "sunday", label: "Domingo", short: "Domingo" },
-  ]
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center p-4">
@@ -198,50 +183,85 @@ const Surcharge = () => {
 
               <FormField
                 control={form.control}
-                name="validDays"
-                render={() => (
+                name="days"
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-gray-700 mb-3 block">
                       Dias da semana (deixe vazio para todos os dias)
                     </FormLabel>
-                    <div className="space-y-3">
-                      {/* Primeira linha: Segunda a Quinta */}
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        {daysOfWeek.slice(0, 4).map((day) => (
-                          <FormItem
-                            key={day.value}
-                            className="flex flex-row items-center space-x-3 space-y-0 rounded-md border border-gray-200 p-3"
-                          >
-                            <Checkbox
-                              checked={form.watch("validDays").includes(day.value)}
-                              onCheckedChange={(checked) => handleDayToggle(day.value, checked as boolean)}
-                              className="data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
-                            />
-                            <FormLabel className="text-xs font-medium text-gray-700 leading-none cursor-pointer">
-                              {day.label}
-                            </FormLabel>
-                          </FormItem>
-                        ))}
-                      </div>
-
-                      {/* Segunda linha: Sexta, Sábado e Domingo ocupando toda largura */}
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        {daysOfWeek.slice(4).map((day) => (
-                          <FormItem
-                            key={day.value}
-                            className="flex flex-row items-center space-x-3 space-y-0 rounded-md border border-gray-200 p-3"
-                          >
-                            <Checkbox
-                              checked={form.watch("validDays").includes(day.value)}
-                              onCheckedChange={(checked) => handleDayToggle(day.value, checked as boolean)}
-                              className="data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
-                            />
-                            <FormLabel className="text-xs font-medium text-gray-700 leading-none cursor-pointer">
-                              {day.label}
-                            </FormLabel>
-                          </FormItem>
-                        ))}
-                      </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      {
+                        daysOfWeek.slice(0, 4).map((day) => {
+                          const isChecked = field.value.includes(day.value)
+                          return (
+                            <FormItem
+                              key={day.value}
+                              role="checkbox"
+                              aria-checked={isChecked}
+                              onClick={() => {
+                                const newValue = isChecked
+                                  ? field.value.filter((d) => d !== day.value)
+                                  : [...field.value, day.value]
+                                field.onChange(newValue)
+                              }}
+                              className="flex flex-row items-center space-x-3 rounded-md border border-gray-200 p-3 cursor-pointer select-none"
+                            >
+                              <div onClick={(e) => e.stopPropagation()}>
+                                <Checkbox
+                                  checked={isChecked}
+                                  onCheckedChange={(checked) => {
+                                    const newValue = checked
+                                      ? [...field.value, day.value]
+                                      : field.value.filter((d) => d !== day.value)
+                                    field.onChange(newValue)
+                                  }}
+                                  className="data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                                />
+                              </div>
+                              <FormLabel className="text-xs font-medium text-gray-700 leading-none cursor-pointer">
+                                {day.label}
+                              </FormLabel>
+                            </FormItem>
+                          )
+                        })
+                      }
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      {
+                        daysOfWeek.slice(4).map((day) => {
+                          const isChecked = field.value.includes(day.value)
+                          return (
+                            <FormItem
+                              key={day.value}
+                              role="checkbox"
+                              aria-checked={isChecked}
+                              onClick={() => {
+                                const newValue = isChecked
+                                  ? field.value.filter((d) => d !== day.value)
+                                  : [...field.value, day.value]
+                                field.onChange(newValue)
+                              }}
+                              className="flex flex-row items-center space-x-3 rounded-md border border-gray-200 p-3 cursor-pointer select-none"
+                            >
+                              <div onClick={(e) => e.stopPropagation()}>
+                                <Checkbox
+                                  checked={isChecked}
+                                  onCheckedChange={(checked) => {
+                                    const newValue = checked
+                                      ? [...field.value, day.value]
+                                      : field.value.filter((d) => d !== day.value)
+                                    field.onChange(newValue)
+                                  }}
+                                  className="data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                                />
+                              </div>
+                              <FormLabel className="text-xs font-medium text-gray-700 leading-none cursor-pointer">
+                                {day.label}
+                              </FormLabel>
+                            </FormItem>
+                          )
+                        })
+                      }
                     </div>
                     <FormDescription className="text-xs text-gray-500">
                       Selecione os dias em que esta regra se aplica

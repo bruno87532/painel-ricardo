@@ -1,7 +1,6 @@
-import { Controller, Post, Get, UsePipes, ValidationPipe, Patch, Delete, Param, Body } from "@nestjs/common";
+import { Controller, Post, Get, UsePipes, ValidationPipe, Put, Delete, Param, Body } from "@nestjs/common";
 import { SurchargeService } from "./surcharge.service";
 import { CreateSurchargeDto } from "./dto/create-surcharge.dto";
-import { UpdateSurchargeDto } from "./dto/update-surcharge.dto";
 
 @Controller("surcharge")
 export class SurchargeController {
@@ -18,9 +17,14 @@ export class SurchargeController {
     return await this.surchargeService.getSurchages()
   }
 
-  @Patch("/:id")
+  @Get("/:id")
+  async getSurchageById(@Param("id") id: string) {
+    return await this.surchargeService.getSurchargeById(id)
+  }
+
+  @Put("/:id")
   @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
-  async updateSurchargeById(@Body() data: UpdateSurchargeDto, @Param("id") id: string) {
+  async updateSurchargeById(@Body() data: CreateSurchargeDto, @Param("id") id: string) {
     return await this.surchargeService.updateSurchargeById(data, id)
   }
 

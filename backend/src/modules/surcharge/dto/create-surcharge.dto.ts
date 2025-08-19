@@ -22,7 +22,7 @@ export class CreateSurchargeDto {
   @IsNotEmpty()
   @IsDefined()
   @MinLength(1)
-  kind: string
+  surchargeTypeId: string
 
   @IsNumber()
   @Type(() => Number)

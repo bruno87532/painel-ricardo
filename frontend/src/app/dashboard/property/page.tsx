@@ -1,6 +1,6 @@
 "use client"
 
-import { Property as PropertyComponent } from "./components/property"
+import { Property as PropertyComponent } from "./components/property/property"
 
 const Property = () => {
   return (

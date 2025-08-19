@@ -1,7 +1,6 @@
 import { HttpException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateSurchargeDto } from "./dto/create-surcharge.dto";
-import { UpdateSurchargeDto } from "./dto/update-surcharge.dto";
 
 @Injectable()
 export class SurchargeService {
@@ -34,7 +33,7 @@ export class SurchargeService {
     }
   }
 
-  async updateSurchargeById(data: UpdateSurchargeDto, id: string) {
+  async updateSurchargeById(data: CreateSurchargeDto, id: string) {
     try {
       const surcharge = await this.prismaService.surcharge.update({
         where: { id },
@@ -74,6 +73,17 @@ export class SurchargeService {
       if (error instanceof HttpException) throw error
       console.error("An error ocurred while fetching surcharge with id", id, error)
       throw new InternalServerErrorException("An error ocurred while fetching surcharge with id")
+    }
+  }
+
+  async deleteSurchargeByIdSurchargeType(idSurchargeType: string) {
+    try { 
+      const surcharges = await this.prismaService.surcharge.deleteMany({ where: { surchargeTypeId: idSurchargeType } })
+    
+      return surcharges
+    } catch (error) {
+      console.error("An error ocurred while deleting surcharge with idSurchargeType", idSurchargeType, error)
+      throw new InternalServerErrorException("An error ocurred while deleting surcharge with idSurchargeType")
     }
   }
 }

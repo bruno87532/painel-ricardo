@@ -6,9 +6,11 @@ import { ConfigModule } from '@nestjs/config';
 import { PropertyModule } from './modules/property/property.module';
 import { RateRuleModule } from './modules/rate-rule/rate-rule.module';
 import { SurchargeModule } from './modules/surcharge/surcharge.module';
+import { SurchargeTypeModule } from './modules/surcharge-type/surcharge-type.module';
 
 @Module({
   imports: [
+    SurchargeTypeModule,
     SurchargeModule,
     RateRuleModule,
     PropertyModule,
