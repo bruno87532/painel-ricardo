@@ -2,15 +2,15 @@
 
 import { TabType } from "../../../types/tab-type"
 import { useState } from "react"
-import { TaxCard } from "./components/tax-card/tax-card"
+import { SurchargeCard } from "./components/surcharge-card/surcharge-card"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Sidebar } from "./components/sidebar/sidebar"
-import { RuleCard } from "./components/rule-card/rule-card"
+import { RateRuleCard } from "./components/rate-rule-card/rate-rule-card"
 import { Menu as MenuPage } from "./components/menu/menu"
 import { Building2, DollarSign, Receipt, Menu, DollarSignIcon } from "lucide-react"
-import { PropertyCard } from "./components/property/property"
-import { NewTaxes } from "./components/new-taxes/new-taxes"
+import { PropertyCard } from "./components/property-card/property-card"
+import { NewSurchargesCard } from "./components/new-surcharges-card/new-surcharges-card"
 
 const PricingDashboard = () => {
   const [activeTab, setActiveTab] = useState<TabType>("properties")
@@ -85,10 +85,10 @@ const PricingDashboard = () => {
             <PropertyCard />
           )}
           {activeTab === "rules" && (
-            <RuleCard />
+            <RateRuleCard />
           )}
-          {activeTab === "taxes" && <TaxCard />}
-          { activeTab === "new-taxes" && <NewTaxes />  }
+          {activeTab === "taxes" && <SurchargeCard />}
+          { activeTab === "new-taxes" && <NewSurchargesCard />  }
         </div>
       </div>
 

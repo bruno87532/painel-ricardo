@@ -2,6 +2,7 @@ import { HttpException, Injectable, InternalServerErrorException, NotFoundExcept
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateUpdateSurchargeTypeDto } from "./dto/create-update-surcharge-type.dto";
 import { SurchargeService } from "../surcharge/surcharge.service";
+import { GetSurchargeTypesByIdsDto } from "./dto/get-surcharge-types-by-ids.dto";
 
 @Injectable()
 export class SurchargeTypeService {
@@ -75,6 +76,26 @@ export class SurchargeTypeService {
     } catch (error) {
       console.error("An error ocurred while deleting surchargeType with id", id, error)
       throw new InternalServerErrorException("An error ocurred while deleting surchargeType with id")
+    }
+  }
+
+  async getSurchargeTypesByIds(data: GetSurchargeTypesByIdsDto) {
+    try {
+      const surchargeTypes = await this.prismaService.surchargeType.findMany({
+        where: {
+          id: {
+            in: data.ids
+          }
+        }
+      })
+
+      if (!surchargeTypes) throw new NotFoundException("surchargeTypes not found")
+
+      return surchargeTypes
+    } catch (error) {
+      if (error instanceof HttpException) throw error
+      console.error("An error ocurred while fetching surchargeTypes with ids", data.ids, error)
+      throw new InternalServerErrorException("An error ocurred while fetching surchargeTypes with ids")
     }
   }
 }

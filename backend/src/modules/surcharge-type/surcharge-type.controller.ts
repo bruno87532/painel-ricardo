@@ -1,10 +1,11 @@
-import { Controller, UsePipes, ValidationPipe, Body, Post, Put, Param, Delete, Get } from "@nestjs/common"
+import { Controller, UsePipes, ValidationPipe, Body, Post, Put, Param, Delete, Get, HttpCode, HttpStatus } from "@nestjs/common"
 import { SurchargeTypeService } from "./surcharge-type.service"
 import { CreateUpdateSurchargeTypeDto } from "./dto/create-update-surcharge-type.dto"
+import { GetSurchargeTypesByIdsDto } from "./dto/get-surcharge-types-by-ids.dto"
 
 @Controller("surcharge-type")
 export class SurchargeTypeController {
-  constructor (private readonly surchargeTypeService: SurchargeTypeService) { }
+  constructor(private readonly surchargeTypeService: SurchargeTypeService) { }
 
   @Post()
   @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
@@ -31,5 +32,12 @@ export class SurchargeTypeController {
   @Delete("/:id")
   async deleteSurchargeType(@Param("id") id: string) {
     return await this.surchargeTypeService.deleteSurchargeType(id)
+  }
+
+  @Post("/ids")
+  @HttpCode(HttpStatus.OK)
+  @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
+  async getPropertiesByIds(@Body() data: GetSurchargeTypesByIdsDto) {
+    return await this.surchargeTypeService.getSurchargeTypesByIds(data)
   }
 }

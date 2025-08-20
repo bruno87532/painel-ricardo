@@ -1,85 +1,69 @@
-import { Badge } from "@/components/ui/badge"
-import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Edit, Trash2, Receipt } from "lucide-react"
+import { Card } from "@/components/ui/card"
+import { Edit, Trash2, Building2 } from "lucide-react"
 import {
   AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogDescription,
   AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogCancel,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogAction,
-  AlertDialogFooter
+  AlertDialogAction
 } from "@/components/ui/alert-dialog"
-import React from "react"
+import { useEffect, useState } from "react"
+import { PropertyService } from "@/../services/property.service"
 
-export const TaxCard = () => {
-  const mockTaxes = [
-    {
-      id: "1",
-      propertyName: "Casa da Praia",
-      name: "Taxa de Limpeza",
-      amount: "R$ 100,00",
-    },
-    {
-      id: "2",
-      propertyName: "Apartamento Centro",
-      name: "Taxa de Serviço",
-      amount: "R$ 50,00",
-    },
-    {
-      id: "3",
-      propertyName: "Chalé da Montanha",
-      name: "Taxa Pet",
-      amount: "R$ 80,00",
-    },
-    {
-      id: "4",
-      propertyName: "Chalé da Montanha",
-      name: "Taxa Pet",
-      amount: "R$ 80,00",
+export const PropertyCard = () => {
+  const [properties, setProperties] = useState<{
+    id: string;
+    name: string;
+    baseCapacity: number;
+    maxCapacity: number;
+  }[]>([])
+  
+  useEffect(() => {
+    const getProperties = async () => {
+      const data = await PropertyService.getProperties()
+      setProperties(data.properties)
     }
-  ]
+    
+    getProperties()
+  }, [])
 
   const handleDelete = (id: string) => {
-    // lógica de exclusão
   }
 
-  if (mockTaxes.length === 0) {
+  if (properties.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
-        <Receipt className="h-12 w-12 text-gray-400 mb-3" />
+        <Building2 className="h-12 w-12 text-gray-400 mb-3" />
         <p className="text-gray-500 mb-4">Nenhum item encontrado</p>
         <Button>Criar novo</Button>
       </div>
     )
   }
 
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
-      {mockTaxes.map((tax) => (
+      {properties.map((property) => (
         <Card
-          key={tax.id}
+          key={property.id}
           className="bg-white/90 backdrop-blur-sm rounded-xl shadow-sm border border-white/20 p-5 transition-all duration-200 hover:shadow-md hover:bg-white/95"
         >
           <div>
-
-            <div className="flex items-center gap-2 mb-3">
-              <Badge variant="secondary" className="bg-blue-100 text-blue-700">
-                {tax.propertyName}
-              </Badge>
-            </div>
+            <h3 className="font-semibold text-lg mb-2 text-gray-800">Nome: {property.name}</h3>
 
             <div className="space-y-2 mb-4">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Taxa:</span>
-                <span className="font-medium text-gray-800">{tax.name}</span>
+                <span className="text-gray-500">Capacidade Mínima:</span>
+                <span className="font-medium text-gray-800">{property.baseCapacity}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Valor:</span>
-                <span className="font-medium text-green-600">{tax.amount}</span>
+                <span className="text-gray-500">Capacidade Máxima:</span>
+                <span className="font-medium text-gray-800">{property.maxCapacity}</span>
               </div>
             </div>
 
@@ -92,6 +76,7 @@ export const TaxCard = () => {
                 <Edit className="h-3 w-3 mr-1" />
                 Editar
               </Button>
+
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button
@@ -113,8 +98,8 @@ export const TaxCard = () => {
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancelar</AlertDialogCancel>
                     <AlertDialogAction
-                      className="bg-red-600 text-white hover:bg-red-700"
-                      onClick={() => handleDelete(tax.id)}
+                      className="bg-red-600 hover:bg-red-700 text-white"
+                      onClick={() => handleDelete(property.id)}
                     >
                       Excluir
                     </AlertDialogAction>

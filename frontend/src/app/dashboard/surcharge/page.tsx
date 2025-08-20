@@ -68,8 +68,8 @@ const Surcharge = () => {
     }
 
     const getSurchargeTypes = async () => {
-      const surchargeTypes = await SurchargeTypeService.getSurchargeTypes()
-      setSurchargeTypes(surchargeTypes)
+      const data = await SurchargeTypeService.getSurchargeTypes()
+      setSurchargeTypes(data.surchargeTypes)
     }
 
     getProperties()
@@ -89,7 +89,6 @@ const Surcharge = () => {
   const handleSubmit = async (data: FormSchema) => {
     await SurchargeService.createSurcharge(data)
     setIsLoading(true)
-    // Simular envio
     await new Promise((resolve) => setTimeout(resolve, 2000))
     console.log("Surcharge data:", data)
     setIsLoading(false)
@@ -107,7 +106,6 @@ const Surcharge = () => {
         <CardContent className="space-y-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-              {/* Propriedade e Tipo de Taxa */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
                 <FormField
                   control={form.control}
@@ -162,7 +160,6 @@ const Surcharge = () => {
                 />
               </div>
 
-              {/* Valor da Taxa */}
               <FormField
                 control={form.control}
                 name="amountCents"
@@ -281,7 +278,6 @@ const Surcharge = () => {
                 )}
               />
 
-              {/* Checkbox - Aplica por noite */}
               <FormField
                 control={form.control}
                 name="appliesPerNight"
@@ -306,7 +302,6 @@ const Surcharge = () => {
                 )}
               />
 
-              {/* Botão de submit */}
               <Button
                 type="submit"
                 disabled={isLoading}

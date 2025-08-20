@@ -5,10 +5,7 @@ export class PropertyService {
   private static pathBackend = process.env.NEXT_PUBLIC_BACKEND
 
   static async createProperty(data: {
-    name: string,
-    canPet: boolean,
-    hasCoffee: boolean,
-    baseCapacity: number,
+    property: Property
   }) {
     const property = await axios.post(this.pathBackend + "/property/", {
       ...data
@@ -21,10 +18,14 @@ export class PropertyService {
       }
     )
 
-    return property.data
+    return {
+      property: property.data
+    }
   }
 
-  static async getProperties() {
+  static async getProperties(): Promise<{
+    properties: Property[]
+  }> {
     const properties = await axios.get(this.pathBackend + "/property/", {
       headers: {
         "Content-Type": "application/json"
@@ -32,10 +33,14 @@ export class PropertyService {
       withCredentials: true
     })
 
-    return properties.data
+    return {
+      properties: properties.data
+    }
   }
 
-  static async deletePropertyById(id: string) {
+  static async deletePropertyById(id: string): Promise<{
+    property: Property
+  }> {
     const property = await axios.delete(this.pathBackend + "/property/" + id, {
       headers: {
         "Content-Type": "application/json"
@@ -43,7 +48,9 @@ export class PropertyService {
       withCredentials: true
     })
 
-    return property.data
+    return {
+      property: property.data
+    }
   }
 
   static async updatePropertyById(id: string, data: {
@@ -51,7 +58,9 @@ export class PropertyService {
     canPet?: boolean,
     hasCoffee?: boolean,
     baseCapacity?: number,
-  }) {
+  }): Promise<{
+    property: Property
+  }> {
     const property = await axios.patch(this.pathBackend + "/property/" + id, {
       ...data
     }, {
@@ -61,10 +70,14 @@ export class PropertyService {
       withCredentials: true
     })
 
-    return property.data
+    return {
+      property: property.data
+    }
   }
 
-  static async getPropertyById(id: string) {
+  static async getPropertyById(id: string): Promise<{
+    property: Property
+  }> {
     const property = await axios.get(this.pathBackend + "/property/" + id, {
       headers: {
         "Content-Type": "application/json"
@@ -72,10 +85,14 @@ export class PropertyService {
       withCredentials: true
     })
 
-    return property.data
+    return {
+      property: property.data
+    }
   }
 
-  static async getPropertiesByIds(data: { ids: string[] }): Promise<Property[]> {
+  static async getPropertiesByIds(data: { ids: string[] }): Promise<{
+    properties: Property[]
+  }> {
     const properties = await axios.post(this.pathBackend + "/property/ids", data, {
       headers: {
         "Content-Type": "application/json"
@@ -83,6 +100,8 @@ export class PropertyService {
       withCredentials: true
     })
 
-    return properties.data
+    return {
+      properties: properties.data
+    }
   }
 }

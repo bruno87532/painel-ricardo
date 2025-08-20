@@ -6,13 +6,21 @@ import { CreateSurchargeDto } from "./dto/create-surcharge.dto";
 export class SurchargeService {
   constructor(private readonly prismaService: PrismaService) { }
 
-  async getSurchages() {
+  async getSurchages(page: number) {
     try {
-      const surcharges = await this.prismaService.surcharge.findMany({})
+      const limit = 10
+      const quantity = await this.prismaService.surcharge.count()
+      const surcharges = await this.prismaService.surcharge.findMany({
+        skip: limit * (page - 1),
+        take: limit
+      })
 
       if (!surcharges) throw new NotFoundException("Surcharge not found")
 
-      return surcharges
+      return {
+        surcharges,
+        hasNext: quantity > limit * page
+      }
     } catch (error) {
       if (error instanceof HttpException) throw error
       console.error("An error ocurred while fetching surcharges", error)

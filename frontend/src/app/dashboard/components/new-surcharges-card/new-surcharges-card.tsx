@@ -17,7 +17,7 @@ import {
 import React from "react"
 
 
-export const NewTaxes = () => {
+export const NewSurchargesCard = () => {
   const mockTaxes = [
     {
       id: "1",

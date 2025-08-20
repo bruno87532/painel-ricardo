@@ -8,6 +8,6 @@ export type RuleProperty = {
     pricePerNightCents: number;
     minNights: number;
     days: WeekDays[];
-    startDate: Date;
-    endDate: Date;
+    startDate: string;
+    endDate: string;
   }

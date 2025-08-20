@@ -3,8 +3,8 @@ import { WeekDays } from "./week-days";
 export type RateRule = {
   id: string;
   propertyId: string;
-  startDate: Date,
-  endDate: Date,
+  startDate: string,
+  endDate: string,
   days: WeekDays[],
   minGuests: number;
   maxGuests: number;

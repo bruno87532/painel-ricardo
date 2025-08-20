@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useEffect, useState } from "react"
 
-export const RuleCard = () => {
+export const RateRuleCard = () => {
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [rules, setRules] = useState<RuleProperty[]>([])
   const [hasNext, setHasNext] = useState<boolean>(false)
@@ -67,7 +67,7 @@ export const RuleCard = () => {
           new Set(rateRules.map((rateRule) => rateRule.propertyId))
         )
         const data = await PropertyService.getPropertiesByIds({ ids: idsProperties })
-        properties.push(...data)
+        properties.push(...data.properties)
       }
 
       const handleRules = () => {
@@ -155,7 +155,7 @@ export const RuleCard = () => {
                 <span className="text-gray-500">Período:</span>
                 {
                   rule.startDate && rule.endDate ? (
-                    <span className="font-medium text-xs text-gray-800">{handleDate(rule.startDate.toString())} a {handleDate(rule.endDate.toString())}</span>
+                    <span className="font-medium text-xs text-gray-800">{handleDate(rule.startDate)} a {handleDate(rule.endDate)}</span>
                   ) : (
                     <span className="font-medium text-xs text-gray-800">Indeterminado</span>
                   )

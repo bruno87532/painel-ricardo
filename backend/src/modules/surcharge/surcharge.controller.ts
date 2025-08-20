@@ -1,4 +1,4 @@
-import { Controller, Post, Get, UsePipes, ValidationPipe, Put, Delete, Param, Body } from "@nestjs/common";
+import { Controller, Post, Get, UsePipes, ValidationPipe, Put, Delete, Param, Body, Query } from "@nestjs/common";
 import { SurchargeService } from "./surcharge.service";
 import { CreateSurchargeDto } from "./dto/create-surcharge.dto";
 
@@ -13,8 +13,8 @@ export class SurchargeController {
   }
 
   @Get()
-  async getSurchages() {
-    return await this.surchargeService.getSurchages()
+  async getSurchages(@Query("page") page: number) {
+    return await this.surchargeService.getSurchages(page)
   }
 
   @Get("/:id")
