@@ -1,4 +1,4 @@
-import { Controller, UsePipes, ValidationPipe, Body, Post, Put, Param, Delete, Get, HttpCode, HttpStatus } from "@nestjs/common"
+import { Controller, UsePipes, ValidationPipe, Body, Post, Put, Param, Delete, Get, HttpCode, HttpStatus, Query } from "@nestjs/common"
 import { SurchargeTypeService } from "./surcharge-type.service"
 import { CreateUpdateSurchargeTypeDto } from "./dto/create-update-surcharge-type.dto"
 import { GetSurchargeTypesByIdsDto } from "./dto/get-surcharge-types-by-ids.dto"
@@ -25,8 +25,8 @@ export class SurchargeTypeController {
   }
 
   @Get()
-  async getSurchargeTypes() {
-    return await this.surchargeTypeService.getSurchargeTypes()
+  async getSurchargeTypes(@Query("page") page: number) {
+    return await this.surchargeTypeService.getSurchargeTypes(page)
   }
 
   @Delete("/:id")

@@ -38,13 +38,22 @@ export class SurchargeTypeService {
     }
   }
 
-  async getSurchargeTypes() {
+  async getSurchargeTypes(page: number) {
     try {
-      const surchargeTypes = await this.prismaService.surchargeType.findMany({})
+      const limit = 10
+      const quantity = await this.prismaService.surchargeType.count()
+
+      const surchargeTypes = await this.prismaService.surchargeType.findMany({
+        skip: limit * (page - 1),
+        take: limit
+      })
 
       if (surchargeTypes.length === 0) throw new NotFoundException("surchargeTypes not found")
 
-      return surchargeTypes
+      return {
+        surchargeTypes,
+        hasNext: quantity > limit * page
+      }
     } catch (error) {
       if (error instanceof HttpException) throw error
       console.error("An error ocurred while fetching surchargeTypes", error)

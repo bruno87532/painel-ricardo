@@ -84,4 +84,17 @@ export class RateRuleService {
       throw new InternalServerErrorException("An error ocurred while deleting rateRule with id")
     }
   }
+
+  async deleteRateRuleByIdProperty(idProperty: string) {
+    try {
+      const rateRule = await this.prismaService.rateRule.deleteMany({
+        where: { propertyId: idProperty }
+      })
+
+      return rateRule
+    } catch (error) {
+      console.error("An error ocurred while deleting rateRule with idProperty", idProperty, error)
+      throw new InternalServerErrorException("An error ocurred while deleting rateRule with idProperty")
+    }
+  }
 }

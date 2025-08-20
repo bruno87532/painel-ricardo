@@ -2,10 +2,16 @@ import { HttpException, Injectable, InternalServerErrorException, NotFoundExcept
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateUpdatePropertyDto } from "./dto/create-update-property.dto";
 import { GetPropertiesByIdsDto } from "./dto/get-properties-by-ids.dto";
+import { RateRuleService } from "../rate-rule/rate-rule.service";
+import { SurchargeService } from "../surcharge/surcharge.service";
 
 @Injectable()
 export class PropertyService {
-  constructor(private readonly prismaService: PrismaService) { }
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly surchargeService: SurchargeService,
+    private readonly rateRuleService: RateRuleService
+  ) { }
 
   async createProperty(data: CreateUpdatePropertyDto) {
     try {
@@ -50,6 +56,9 @@ export class PropertyService {
 
   async deletePropertyById(id: string) {
     try {
+      await this.rateRuleService.deleteRateRuleByIdProperty(id)
+      await this.surchargeService.deleteSurchargeByIdProperty(id)
+
       const property = await this.prismaService.property.delete({
         where: { id }
       })

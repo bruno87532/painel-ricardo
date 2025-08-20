@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Edit, Trash2, DollarSign } from "lucide-react"
-import { WeekDays } from "@/../types/week-days"
+import { toast } from "sonner"
 import { Property } from "@/../types/property"
 import { RuleProperty } from "@/../types/rule-property"
 import {
@@ -49,12 +49,22 @@ export const RateRuleCard = () => {
 
   const handleDelete = async (id: string) => {
     await RateRuleService.deleteRateRuleById(id)
+    toast("Regra de preço deletada", {
+      description: "Regra de preço deletada com sucesso",
+      action: {
+        label: "Feito",
+        onClick: () => { },
+      },
+    })
+    setRules((prev) => {
+      return prev.filter((item) => item.id !== id)
+    })
   }
 
   useEffect(() => {
     const rateRules: RateRule[] = []
     const properties: Property[] = []
-    
+
     const handleData = async () => {
       const getRateRules = async () => {
         const data = await RateRuleService.getRateRules(currentPage)

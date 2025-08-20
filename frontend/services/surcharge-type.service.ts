@@ -1,5 +1,6 @@
 import axios from "axios"
 import type { SurchargeType } from "../types/surcharge-type"
+import { number } from "zod"
 
 export class SurchargeTypeService {
   private static pathBackend = process.env.NEXT_PUBLIC_BACKEND
@@ -24,7 +25,7 @@ export class SurchargeTypeService {
   static async deleteSurchargeTypeById(id: string): Promise<{
     surchargeType: SurchargeType
   }> {
-    const surchargeType = await axios.delete(this.pathBackend + "/surcharge-type/" + id, {
+    const data = await axios.delete(this.pathBackend + "/surcharge-type/" + id, {
       headers: {
         "Content-Type": "application/json"
       },
@@ -32,22 +33,21 @@ export class SurchargeTypeService {
     })
 
     return {
-      surchargeType: surchargeType.data
+      surchargeType: data.data.surchargeType
     }
   }
 
-  static async getSurchargeTypes(): Promise<{
-    surchargeTypes: SurchargeType[]
+  static async getSurchargeTypes(page: number): Promise<{
+    surchargeTypes: SurchargeType[],
   }> {
-    const surchargeTypes = await axios.get(this.pathBackend + "/surcharge-type", {
+    const surchargeTypes = await axios.get(this.pathBackend + "/surcharge-type?page=" + page, {
       headers: {
         "Content-Type": "application/json"
       },
       withCredentials: true
     })
-
     return {
-      surchargeTypes: surchargeTypes.data
+      surchargeTypes: surchargeTypes.data.surchargeTypes
     }
   }
 

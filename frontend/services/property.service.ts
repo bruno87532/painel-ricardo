@@ -5,7 +5,9 @@ export class PropertyService {
   private static pathBackend = process.env.NEXT_PUBLIC_BACKEND
 
   static async createProperty(data: {
-    property: Property
+    name: string;
+    baseCapacity: number;
+    maxCapacity: number;
   }) {
     const property = await axios.post(this.pathBackend + "/property/", {
       ...data

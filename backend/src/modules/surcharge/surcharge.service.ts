@@ -94,4 +94,17 @@ export class SurchargeService {
       throw new InternalServerErrorException("An error ocurred while deleting surcharge with idSurchargeType")
     }
   }
+
+  async deleteSurchargeByIdProperty(idProperty: string) {
+    try {
+      const surcharge = await this.prismaService.surcharge.deleteMany({
+        where: { propertyId: idProperty }
+      })
+
+      return surcharge
+    } catch (error) {
+      console.error("An error ocurred while deleting surcharge with idProperty", idProperty, error)
+      throw new InternalServerErrorException("An error ocurred while deleting surcharge with idProperty")
+    }
+  }
 }

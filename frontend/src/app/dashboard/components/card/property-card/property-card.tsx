@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Edit, Trash2, Building2 } from "lucide-react"
+import { DialogContent } from "@/components/ui/dialog"
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -14,6 +15,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useEffect, useState } from "react"
 import { PropertyService } from "@/../services/property.service"
+import { toast } from "sonner"
 
 export const PropertyCard = () => {
   const [properties, setProperties] = useState<{
@@ -22,17 +24,28 @@ export const PropertyCard = () => {
     baseCapacity: number;
     maxCapacity: number;
   }[]>([])
-  
+
   useEffect(() => {
     const getProperties = async () => {
       const data = await PropertyService.getProperties()
       setProperties(data.properties)
     }
-    
+
     getProperties()
   }, [])
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
+    await PropertyService.deletePropertyById(id)
+    toast("Propriedade deletada", {
+      description: "Propriedade deletada com sucesso",
+      action: {
+        label: "Feito",
+        onClick: () => { },
+      },
+    })
+    setProperties((prev) => {
+      return prev.filter((item) => item.id !== id)
+    })
   }
 
   if (properties.length === 0) {
@@ -96,9 +109,9 @@ export const PropertyCard = () => {
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogCancel className="cursor-pointer">Cancelar</AlertDialogCancel>
                     <AlertDialogAction
-                      className="bg-red-600 hover:bg-red-700 text-white"
+                      className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
                       onClick={() => handleDelete(property.id)}
                     >
                       Excluir

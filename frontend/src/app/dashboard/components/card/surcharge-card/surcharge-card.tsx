@@ -24,6 +24,7 @@ import { PropertyService } from "@/../services/property.service"
 import { SurchargeProperty } from "@/../types/surcharge-property"
 import { SurchargeTypeService } from "@/../services/surcharge-type.service"
 import type { SurchargeType } from "@/../types/surcharge-type"
+import { toast } from "sonner"
 
 export const SurchargeCard = () => {
   const [surcharges, setSurcharges] = useState<SurchargeProperty[]>([])
@@ -117,7 +118,18 @@ export const SurchargeCard = () => {
     handleData()
   }, [currentPage])
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
+    await SurchargeService.deleteSurchargeById(id)
+    toast("Taxa deletada", {
+      description: "Taxa deletada com sucesso",
+      action: {
+        label: "Feito",
+        onClick: () => { },
+      },
+    })
+    setSurcharges((prev) => {
+      return prev.filter((item) => item.id !== id)
+    })
   }
 
   if (surcharges.length === 0) {

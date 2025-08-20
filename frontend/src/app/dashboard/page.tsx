@@ -1,23 +1,25 @@
 "use client"
 
-import { TabType } from "../../../types/tab-type"
+import type { TabType } from "../../../types/tab-type"
 import { useState } from "react"
-import { SurchargeCard } from "./components/surcharge-card/surcharge-card"
+import { SurchargeCard } from "./components/card/surcharge-card/surcharge-card"
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
 import { Sidebar } from "./components/sidebar/sidebar"
-import { RateRuleCard } from "./components/rate-rule-card/rate-rule-card"
 import { Menu as MenuPage } from "./components/menu/menu"
 import { Building2, DollarSign, Receipt, Menu, DollarSignIcon } from "lucide-react"
-import { PropertyCard } from "./components/property-card/property-card"
-import { NewSurchargesCard } from "./components/new-surcharges-card/new-surcharges-card"
+import { PropertyCard } from "./components/card/property-card/property-card"
+import { NewSurchargesCard } from "./components/card/new-surcharges-card/new-surcharges-card"
+import { RateRuleCard } from "./components/card/rate-rule-card/rate-rule-card" // Added import for RateRuleCard
+import { Property } from "./components/dialog/property/property"
+import { RateRules } from "./components/dialog/rate-rules/rate-rule"
+import { Surcharge } from "./components/dialog/surcharge/surcharge"
+import { SurchargeType } from "./components/dialog/surcharge-type/surcharge-type"
 
 const PricingDashboard = () => {
   const [activeTab, setActiveTab] = useState<TabType>("properties")
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [visibleItems, setVisibleItems] = useState(10)
-  const [createModalOpen, setCreateModalOpen] = useState(false)
-  const [editModalOpen, setEditModalOpen] = useState(false)
 
   const getCurrentTitle = () => {
     switch (activeTab) {
@@ -38,7 +40,7 @@ const PricingDashboard = () => {
     { id: "properties", label: "Propriedades", icon: Building2 },
     { id: "rules", label: "Regras de Preço", icon: DollarSign },
     { id: "taxes", label: "Taxas", icon: Receipt },
-    { id: "new-taxes", label: "Tipos de Taxas", icon: DollarSignIcon }
+    { id: "new-taxes", label: "Tipos de Taxas", icon: DollarSignIcon },
   ]
 
   return (
@@ -79,34 +81,32 @@ const PricingDashboard = () => {
                 {getCurrentTitle()}
               </h1>
             </div>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-6 py-2 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl cursor-pointer"
+                >
+                  {activeTab === "properties" && "Cadastrar Nova Propriedade"}
+                  {activeTab === "rules" && "Cadastrar Nova Regra de Precificação"}
+                  {activeTab === "taxes" && "Cadastrar Nova Taxa"}
+                  {activeTab === "new-taxes" && "Cadastrar Novo Tipo de Taxa"}
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                {activeTab === "properties" && <Property />}
+                {activeTab === "rules" && <RateRules />}
+                {activeTab === "taxes" && <Surcharge />}
+                {activeTab === "new-taxes" && <SurchargeType />}
+              </DialogContent>
+            </Dialog>
           </div>
-
-          {activeTab === "properties" && (
-            <PropertyCard />
-          )}
-          {activeTab === "rules" && (
-            <RateRuleCard />
-          )}
+          {activeTab === "properties" && <PropertyCard />}
+          {activeTab === "rules" && <RateRuleCard />}
           {activeTab === "taxes" && <SurchargeCard />}
-          { activeTab === "new-taxes" && <NewSurchargesCard />  }
+          {activeTab === "new-taxes" && <NewSurchargesCard />}
+
         </div>
       </div>
-
-      <Dialog open={createModalOpen} onOpenChange={setCreateModalOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Criar {getCurrentTitle().slice(0, -1)}</DialogTitle>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Editar {getCurrentTitle().slice(0, -1)}</DialogTitle>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
     </div >
   )
 }

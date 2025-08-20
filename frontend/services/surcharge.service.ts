@@ -40,4 +40,19 @@ export class SurchargeService {
       surcharges: surcharges.data.surcharges
     }
   }
+
+  static async deleteSurchargeById(id: string): Promise<{
+    surcharge: Surcharge
+  }> {
+    const surcharge = await axios.delete(this.pathBackend + "/surcharge/" + id, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      withCredentials: true
+    })
+
+    return {
+      surcharge: surcharge.data
+    }
+  }
 }
