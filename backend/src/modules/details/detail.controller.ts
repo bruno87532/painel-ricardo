@@ -2,7 +2,7 @@ import { Controller, UsePipes, ValidationPipe, Post, Get, Delete, Put, Body, Par
 import { DetailService } from "./detail.service";
 import { CreateUpdateDetailDto } from "./dto/create-update-detail.dto";
 
-@Controller("details")
+@Controller("detail")
 export class DetailController {
   constructor (private readonly detailService: DetailService) { }
 

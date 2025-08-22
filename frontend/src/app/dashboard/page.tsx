@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
 import { Sidebar } from "./components/sidebar/sidebar"
 import { Menu as MenuPage } from "./components/menu/menu"
-import { Building2, DollarSign, Receipt, Menu, DollarSignIcon } from "lucide-react"
+import { Building2, DollarSign, Receipt, Menu, DollarSignIcon, Info } from "lucide-react"
 import { PropertyCard } from "./components/card/property-card/property-card"
 import { NewSurchargesCard } from "./components/card/new-surcharges-card/new-surcharges-card"
 import { RateRuleCard } from "./components/card/rate-rule-card/rate-rule-card" // Added import for RateRuleCard
@@ -16,6 +16,7 @@ import { RateRules } from "./components/dialog/rate-rules/rate-rule"
 import { Surcharge } from "./components/dialog/surcharge/surcharge"
 import { SurchargeType } from "./components/dialog/surcharge-type/surcharge-type"
 import { DataProvider } from "./context/use-data"
+import { DetailCard } from "./components/card/detail-card/detail-card"
 
 const PricingDashboard = () => {
   const [activeTab, setActiveTab] = useState<TabType>("properties")
@@ -43,6 +44,7 @@ const PricingDashboard = () => {
     { id: "rules", label: "Regras de Preço", icon: DollarSign },
     { id: "taxes", label: "Taxas", icon: Receipt },
     { id: "new-taxes", label: "Tipos de Taxas", icon: DollarSignIcon },
+    { id: "details", label: "Detalhes", icon: Info }
   ]
 
   return (
@@ -93,6 +95,7 @@ const PricingDashboard = () => {
                     {activeTab === "rules" && "Cadastrar Nova Regra de Precificação"}
                     {activeTab === "taxes" && "Cadastrar Nova Taxa"}
                     {activeTab === "new-taxes" && "Cadastrar Novo Tipo de Taxa"}
+                    {activeTab === "details" && "Cadastrar Novo Detalhe"}
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
@@ -100,6 +103,7 @@ const PricingDashboard = () => {
                   {activeTab === "rules" && <RateRules setIsOpen={setIsOpen} />}
                   {activeTab === "taxes" && <Surcharge setIsOpen={setIsOpen} />}
                   {activeTab === "new-taxes" && <SurchargeType setIsOpen={setIsOpen} />}
+                  {activeTab === "details" && <SurchargeType setIsOpen={setIsOpen} />}
                 </DialogContent>
               </Dialog>
             </div>
@@ -107,6 +111,7 @@ const PricingDashboard = () => {
             {activeTab === "rules" && <RateRuleCard />}
             {activeTab === "taxes" && <SurchargeCard />}
             {activeTab === "new-taxes" && <NewSurchargesCard />}
+            {activeTab === "details" && <DetailCard />}
 
           </div>
         </div>
