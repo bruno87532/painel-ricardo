@@ -25,10 +25,15 @@ import { SurchargeProperty } from "@/../types/surcharge-property"
 import { SurchargeTypeService } from "@/../services/surcharge-type.service"
 import type { SurchargeType } from "@/../types/surcharge-type"
 import { toast } from "sonner"
+import { useDataContext } from "@/app/dashboard/context/use-data"
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
+import { Surcharge as SurchargeComponent } from "../../dialog/surcharge/surcharge"
+import { iso } from "zod"
 
 export const SurchargeCard = () => {
-  const [surcharges, setSurcharges] = useState<SurchargeProperty[]>([])
+  const { surcharges, setSurcharges } = useDataContext()
   const [currentPage, setCurrentPage] = useState<number>(1)
+  const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const mapDays = {
     "MONDAY": "Segunda",
@@ -137,7 +142,14 @@ export const SurchargeCard = () => {
       <div className="flex flex-col items-center justify-center py-12">
         <Receipt className="h-12 w-12 text-gray-400 mb-3" />
         <p className="text-gray-500 mb-4">Nenhum item encontrado</p>
-        <Button>Criar novo</Button>
+        <Dialog onOpenChange={() => setIsOpen(!isOpen)} open={isOpen}>
+          <DialogTrigger asChild>
+            <Button className="cursor-pointer">Criar novo</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <SurchargeComponent setIsOpen={setIsOpen} />
+          </DialogContent>
+        </Dialog>
       </div>
     )
   }
@@ -193,14 +205,21 @@ export const SurchargeCard = () => {
             </div>
 
             <div className="flex gap-2">
-              <Button
-                size="sm"
-                variant="outline"
-                className="flex-1 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 hover:text-blue-800 cursor-pointer"
-              >
-                <Edit className="h-3 w-3 mr-1" />
-                Editar
-              </Button>
+              <Dialog onOpenChange={() => setIsOpen(!isOpen)} open={isOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex-1 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 hover:text-blue-800 cursor-pointer"
+                  >
+                    <Edit className="h-3 w-3 mr-1" />
+                    Editar
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <SurchargeComponent setIsOpen={setIsOpen} id={surcharge.id} />
+                </DialogContent>
+              </Dialog>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button

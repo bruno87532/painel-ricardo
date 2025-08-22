@@ -1,0 +1,62 @@
+import { PropertyService } from "@/../services/property.service"
+import React, { useEffect } from "react"
+import { PropertyFormData } from "../schema/schema-property"
+import { useDataContext } from "@/app/dashboard/context/use-data"
+import { toast } from "sonner"
+import { UseFormReturn } from "react-hook-form"
+
+export const usePropertyHook = (
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  form: UseFormReturn<PropertyFormData>,
+  id?: string,
+) => {
+  const { setProperties } = useDataContext()
+
+  useEffect(() => {
+    const getProperty = async () => {
+      if (id) {
+        const data = await PropertyService.getPropertyById(id)
+
+        form.reset({
+          name: data.property.name,
+          baseCapacity: data.property.baseCapacity,
+        });
+      }
+    }
+
+    getProperty()
+  }, [id, form])
+
+  const handleSubmit = async (data: PropertyFormData) => {
+    setIsLoading(true)
+
+    const dataDb = id ? await PropertyService.updatePropertyById(id, data) : await PropertyService.createProperty(data)
+
+    const { name, baseCapacity, maxCapacity } = dataDb.property
+    const newItem = {
+      name, baseCapacity, maxCapacity,
+      id: dataDb.property.id
+    }
+
+    setProperties((prev) => {
+      return [
+        ...(id ? prev.filter((item) => item.id !== id) : prev),
+        newItem
+      ]
+    })
+
+    toast(id ? "Propriedade atualizada" : "Propriedade criada", {
+      description: id ? "Propriedade atualizada com sucesso" : "Propriedade criada com sucesso",
+      action: {
+        label: "Feito",
+        onClick: () => { },
+      },
+    })
+
+    setIsLoading(false)
+    setIsOpen(false)
+  }
+
+  return { handleSubmit }
+}

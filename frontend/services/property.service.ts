@@ -8,7 +8,9 @@ export class PropertyService {
     name: string;
     baseCapacity: number;
     maxCapacity: number;
-  }) {
+  }): Promise<{
+    property: Property
+  }> {
     const property = await axios.post(this.pathBackend + "/property/", {
       ...data
     },
@@ -63,7 +65,7 @@ export class PropertyService {
   }): Promise<{
     property: Property
   }> {
-    const property = await axios.patch(this.pathBackend + "/property/" + id, {
+    const property = await axios.put(this.pathBackend + "/property/" + id, {
       ...data
     }, {
       headers: {

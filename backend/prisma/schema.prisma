@@ -31,9 +31,10 @@ model Property {
   videos       Video[]
   surcharge    Surcharge[]
   baseCapacity Int         @default(10)
-  maxCapacity  Int  @default(10)
+  maxCapacity  Int         @default(10)
   rateRules    RateRule[]
   createdAt    DateTime    @default(now())
+  details      Detail[]
 }
 
 model RateRule {
@@ -66,6 +67,13 @@ model SurchargeType {
   id        String      @id @default(uuid())
   name      String
   Surcharge Surcharge[]
+}
+
+model Detail {
+  id          String   @id @default(uuid())
+  description String
+  propertyId  String
+  property    Property @relation(fields: [propertyId], references: [id])
 }
 
 model Image {

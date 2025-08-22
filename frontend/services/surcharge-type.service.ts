@@ -1,6 +1,5 @@
 import axios from "axios"
 import type { SurchargeType } from "../types/surcharge-type"
-import { number } from "zod"
 
 export class SurchargeTypeService {
   private static pathBackend = process.env.NEXT_PUBLIC_BACKEND
@@ -37,10 +36,10 @@ export class SurchargeTypeService {
     }
   }
 
-  static async getSurchargeTypes(page: number): Promise<{
+  static async getSurchargeTypes(page?: number): Promise<{
     surchargeTypes: SurchargeType[],
   }> {
-    const surchargeTypes = await axios.get(this.pathBackend + "/surcharge-type?page=" + page, {
+    const surchargeTypes = await axios.get(`${this.pathBackend}/surcharge-type${page ? `?page=${page}` : ""}`, {
       headers: {
         "Content-Type": "application/json"
       },

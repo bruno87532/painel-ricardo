@@ -37,7 +37,6 @@ const Auth = () => {
     setIsLoading(true)
     try {
       await AuthService.login(data)
-      console.log("aqui foi")
     } catch (error) {
       if (error instanceof AxiosError && error.response?.status === 401) {
         form.setError("password", {

@@ -25,7 +25,7 @@ export class SurchargeTypeController {
   }
 
   @Get()
-  async getSurchargeTypes(@Query("page") page: number) {
+  async getSurchargeTypes(@Query("page") page?: number) {
     return await this.surchargeTypeService.getSurchargeTypes(page)
   }
 

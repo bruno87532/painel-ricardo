@@ -14,15 +14,19 @@ export class RateRuleService {
     maxGuests: number,
     pricePerNightCents: number,
     minNights: number
-  }) {
-    const rateRule = await axios.post(this.pathBackend + "/rate-rule", data, {
+  }): Promise<{
+    rateRule: RateRule
+  }> {
+    const dataDb = await axios.post(this.pathBackend + "/rate-rule", data, {
       headers: {
         "Content-Type": "application/json"
       },
       withCredentials: true
     })
 
-    return rateRule.data
+    return {
+      rateRule: dataDb.data
+    }
   }
 
   static async updateRateRuleById(id: string, data: {
@@ -34,25 +38,33 @@ export class RateRuleService {
     maxGuests: number,
     pricePerNightCents: number,
     minNights: number
-  }) {
-    const rateRule = await axios.put(this.pathBackend + "/rate-rule/" + id, data, {
+  }): Promise<{
+    rateRule: RateRule
+  }> {
+    const dataDb = await axios.put(this.pathBackend + "/rate-rule/" + id, data, {
       headers: {
         "Content-Type": "application/json"
       },
       withCredentials: true
     })
-
-    return rateRule.data
+    return {
+      rateRule: dataDb.data
+    }
   }
 
-  static async getRateRuleById(id: string) {
+  static async getRateRuleById(id: string): Promise<{
+    rateRule: RateRule
+  }> {
     const rateRule = await axios.get(this.pathBackend + "/rate-rule/" + id, {
       headers: {
         "Content-Type": "application/json"
       },
       withCredentials: true
     })
-    return rateRule.data
+
+    return {
+      rateRule: rateRule.data
+    }
   }
 
   static async getRateRules(page: number): Promise<{

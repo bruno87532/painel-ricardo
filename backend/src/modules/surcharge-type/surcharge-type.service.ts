@@ -38,21 +38,22 @@ export class SurchargeTypeService {
     }
   }
 
-  async getSurchargeTypes(page: number) {
+  async getSurchargeTypes(page?: number) {
     try {
       const limit = 10
-      const quantity = await this.prismaService.surchargeType.count()
+      const quantity = page ? await this.prismaService.surchargeType.count() : 0
 
-      const surchargeTypes = await this.prismaService.surchargeType.findMany({
-        skip: limit * (page - 1),
-        take: limit
-      })
+      const options: { skip?: number; take?: number } = page
+        ? { skip: limit * (page - 1), take: limit }
+        : {};
+
+      const surchargeTypes = await this.prismaService.surchargeType.findMany(options);
 
       if (surchargeTypes.length === 0) throw new NotFoundException("surchargeTypes not found")
 
       return {
         surchargeTypes,
-        hasNext: quantity > limit * page
+        ...(page ? { hasNext: quantity > limit * page } : {})
       }
     } catch (error) {
       if (error instanceof HttpException) throw error

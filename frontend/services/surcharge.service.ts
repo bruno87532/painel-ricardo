@@ -5,12 +5,33 @@ import type { Surcharge } from "../types/surcharge"
 export class SurchargeService {
   private static pathBackend = process.env.NEXT_PUBLIC_BACKEND
 
+  static async updateSurchargeById(id: string, data: {
+    propertyId: string,
+    days: WeekDays[],
+    startDate?: Date,
+    endDate?: Date,
+    amountCents: number,
+    appliesPerNight: boolean
+  }): Promise<{
+    surcharge: Surcharge
+  }> {
+    const dataDb = await axios.put(this.pathBackend + "/surcharge/" + id, data, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      withCredentials: true
+    })
+
+    return {
+      surcharge: dataDb.data.surcharge
+    }
+  }
+
   static async createSurcharge(data: {
     propertyId: string,
     days: WeekDays[],
     startDate?: Date,
     endDate?: Date,
-    kind: string,
     amountCents: number,
     appliesPerNight: boolean
   }): Promise<{ surcharge: Surcharge }> {
@@ -54,5 +75,20 @@ export class SurchargeService {
     return {
       surcharge: surcharge.data
     }
+  }
+
+  static async getSurchargeById(id: string): Promise<{
+    surcharge: Surcharge
+  }> {
+    const surcharge = await axios.get(this.pathBackend + "/surcharge/" + id, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      withCredentials: true
+    })
+
+    return {
+      surcharge: surcharge.data
+    } 
   }
 }

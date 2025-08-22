@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Edit, Trash2, Building2 } from "lucide-react"
-import { DialogContent } from "@/components/ui/dialog"
+import { useDataContext } from "@/app/dashboard/context/use-data"
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -16,14 +16,12 @@ import {
 import { useEffect, useState } from "react"
 import { PropertyService } from "@/../services/property.service"
 import { toast } from "sonner"
+import { Property } from "../../dialog/property/property"
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
 
 export const PropertyCard = () => {
-  const [properties, setProperties] = useState<{
-    id: string;
-    name: string;
-    baseCapacity: number;
-    maxCapacity: number;
-  }[]>([])
+  const { properties, setProperties } = useDataContext()
+  const [isOpen, setIsOpen] = useState<boolean>(false)
 
   useEffect(() => {
     const getProperties = async () => {
@@ -53,7 +51,14 @@ export const PropertyCard = () => {
       <div className="flex flex-col items-center justify-center py-12">
         <Building2 className="h-12 w-12 text-gray-400 mb-3" />
         <p className="text-gray-500 mb-4">Nenhum item encontrado</p>
-        <Button>Criar novo</Button>
+        <Dialog onOpenChange={() => setIsOpen(!isOpen)} open={isOpen}>
+          <DialogTrigger asChild>
+            <Button className="cursor-pointer">Criar novo</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <Property setIsOpen={setIsOpen} />
+          </DialogContent>
+        </Dialog>
       </div>
     )
   }
@@ -81,14 +86,21 @@ export const PropertyCard = () => {
             </div>
 
             <div className="flex gap-2">
-              <Button
-                size="sm"
-                variant="outline"
-                className="flex-1 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 hover:text-blue-800 cursor-pointer"
-              >
-                <Edit className="h-3 w-3 mr-1" />
-                Editar
-              </Button>
+              <Dialog onOpenChange={() => setIsOpen(!isOpen)} open={isOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex-1 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 hover:text-blue-800 cursor-pointer"
+                  >
+                    <Edit className="h-3 w-3 mr-1" />
+                    Editar
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <Property id={property.id} setIsOpen={setIsOpen} />
+                </DialogContent>
+              </Dialog>
 
               <AlertDialog>
                 <AlertDialogTrigger asChild>
