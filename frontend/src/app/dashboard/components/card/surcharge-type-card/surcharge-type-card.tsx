@@ -23,7 +23,7 @@ import { useDataContext } from "@/app/dashboard/context/use-data"
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
 import { SurchargeType } from "../../dialog/surcharge-type/surcharge-type"
 
-export const NewSurchargesCard = () => {
+export const SurchargeTypeCard = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const { surchargeTypes, setSurchargeTypes } = useDataContext()
   const [currentPage, setCurrentPage] = useState<number>(1)

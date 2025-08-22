@@ -12,6 +12,7 @@ import { PropertyService } from "@/../services/property.service"
 import { DetailService } from "@/../services/detail.service"
 import { Detail } from "@/../types/detail"
 import { Property } from "@/../types/property"
+import { Detail as DetailComponent } from "../../dialog/detail/detail"
 
 export const DetailCard = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -28,7 +29,6 @@ export const DetailCard = () => {
       }
 
       const getPropertiesByIds = async () => {
-        console.log(propertiesArr)
         const ids = Array.from(
           new Set(detailsArr.map((detail) => detail.propertyId))
         )
@@ -102,7 +102,7 @@ export const DetailCard = () => {
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
-                  {/* <SurchargeComponent setIsOpen={setIsOpen} id={surcharge.id} /> */}
+                  <DetailComponent setIsOpen={setIsOpen} id={detail.id} />
                 </DialogContent>
               </Dialog>
               <AlertDialog>
