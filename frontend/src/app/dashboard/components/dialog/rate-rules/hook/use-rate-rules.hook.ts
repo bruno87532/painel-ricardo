@@ -12,7 +12,7 @@ import { RateRuleFormDataType } from "../schema/schema-rate-rule"
 
 export const useRateRulesHook = (
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  onClose: () => void,
   form: UseFormReturn<RateRuleFormDataType>,
   id?: string
 ) => {
@@ -90,7 +90,7 @@ export const useRateRulesHook = (
     })
 
     setIsLoading(false)
-    setIsOpen(false)
+    onClose()
   }
 
   return { handleSubmit }

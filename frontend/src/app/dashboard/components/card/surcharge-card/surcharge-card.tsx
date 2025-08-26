@@ -28,12 +28,12 @@ import { toast } from "sonner"
 import { useDataContext } from "@/app/dashboard/context/use-data"
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
 import { Surcharge as SurchargeComponent } from "../../dialog/surcharge/surcharge"
-import { iso } from "zod"
 
 export const SurchargeCard = () => {
   const { surcharges, setSurcharges } = useDataContext()
   const [currentPage, setCurrentPage] = useState<number>(1)
-  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [selectedSurchargeId, setSelectedSurchargeId] = useState<string | null>(null)
+  const [isCreating, setIsCreating] = useState<boolean>(false)
 
   const mapDays = {
     "MONDAY": "Segunda",
@@ -142,12 +142,12 @@ export const SurchargeCard = () => {
       <div className="flex flex-col items-center justify-center py-12">
         <Receipt className="h-12 w-12 text-gray-400 mb-3" />
         <p className="text-gray-500 mb-4">Nenhum item encontrado</p>
-        <Dialog onOpenChange={() => setIsOpen(!isOpen)} open={isOpen}>
+        <Dialog onOpenChange={(open) => setIsCreating(open)} open={isCreating}>
           <DialogTrigger asChild>
             <Button className="cursor-pointer">Criar novo</Button>
           </DialogTrigger>
           <DialogContent>
-            <SurchargeComponent setIsOpen={setIsOpen} />
+            <SurchargeComponent onClose={() => setIsCreating(false)} />
           </DialogContent>
         </Dialog>
       </div>
@@ -205,19 +205,22 @@ export const SurchargeCard = () => {
             </div>
 
             <div className="flex gap-2">
-              <Dialog onOpenChange={() => setIsOpen(!isOpen)} open={isOpen}>
+              <Dialog onOpenChange={(open) => {
+                if (!open) setSelectedSurchargeId(null)
+              }} open={surcharge.id === selectedSurchargeId}>
                 <DialogTrigger asChild>
                   <Button
                     size="sm"
                     variant="outline"
                     className="flex-1 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 hover:text-blue-800 cursor-pointer"
+                    onClick={() => setSelectedSurchargeId(surcharge.id)}
                   >
                     <Edit className="h-3 w-3 mr-1" />
                     Editar
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
-                  <SurchargeComponent setIsOpen={setIsOpen} id={surcharge.id} />
+                  <SurchargeComponent onClose={() => setSelectedSurchargeId(null)} id={surcharge.id} />
                 </DialogContent>
               </Dialog>
               <AlertDialog>

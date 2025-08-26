@@ -1,94 +1,110 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogFooter, AlertDialogCancel, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogAction } from "@/components/ui/alert-dialog"
-import { Trash2, Edit, Info } from "lucide-react"
-import { useEffect, useState } from "react"
-import { useDataContext } from "@/app/dashboard/context/use-data"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import { Building2, Edit, Trash2 } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import type { Property } from "@/../types/property"
+import { ImageService } from "@/../services/image.service"
+import type { ImageReturn } from "@/../types/image"
 import { PropertyService } from "@/../services/property.service"
-import { DetailService } from "@/../services/detail.service"
-import { Detail } from "@/../types/detail"
-import { Property } from "@/../types/property"
-import { Detail as DetailComponent } from "../../dialog/detail/detail"
+import type { ImageProperty } from "@/../types/image-property"
+import { Image } from "../../dialog/image/image"
+import ImageNext from "next/image"
+import {
+  AlertDialog,
+  AlertDialogHeader,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogCancel,
+  AlertDialogAction,
+  AlertDialogTitle,
+  AlertDialogFooter,
+  AlertDialogDescription
+} from "@/components/ui/alert-dialog"
+import { useDataContext } from "@/app/dashboard/context/use-data"
 import { toast } from "sonner"
 
-export const DetailCard = () => {
+export const ImageCard = () => {
+  const { images, setImages } = useDataContext()
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [selectedImageId, setSelectedImageId] = useState<string | null>(null)
   const [isCreating, setIsCreating] = useState<boolean>(false)
-  const { details, setDetails, properties } = useDataContext()
-  const [selectedDetailId, setSelectedDetailId] = useState<string | null>(null)
 
   useEffect(() => {
     const handleData = async () => {
-      const detailsArr: Detail[] = []
+      const imagesArr: ImageReturn[] = []
       const propertiesArr: Property[] = []
 
-      const getDetails = async () => {
-        const data = await DetailService.getDetails()
-        detailsArr.push(...data.details)
+      const getImages = async () => {
+        const data = await ImageService.getImages(currentPage)
+        imagesArr.push(...data.images)
       }
 
-      const getPropertiesByIds = async () => {
-        const ids = Array.from(
-          new Set(detailsArr.map((detail) => detail.propertyId))
-        )
+      const getProperties = async () => {
+        const ids = Array.from(new Set(imagesArr.map((image) => image.propertyId)))
         const data = await PropertyService.getPropertiesByIds({ ids })
         propertiesArr.push(...data.properties)
       }
 
-      const handleDetail = () => {
+      const handleImages = () => {
         const propertyMap = new Map<string, { id: string; name: string }>()
         for (const property of propertiesArr) {
           propertyMap.set(property.id, property)
         }
 
-        const details = detailsArr.map((detail) => {
-          const property = propertyMap.get(detail.propertyId)
-          if (!property) return null
+        const ImageProperty: ImageProperty[] = imagesArr
+          .map((image) => {
+            const property = propertyMap.get(image.propertyId)
+            if (!property) return null
 
-          return {
-            description: detail.description,
-            id: detail.id,
-            propertyName: property.name
-          }
-        }).filter((item) => !!item)
+            return {
+              id: image.id,
+              propertyName: property.name,
+              idDrive: image.idDrive,
+              description: image.description,
+            }
+          })
+          .filter((item): item is ImageProperty => item !== null)
 
-        setDetails(details)
+        setImages(ImageProperty)
       }
 
-      await getDetails()
-      await getPropertiesByIds()
-      handleDetail()
+      await getImages()
+      await getProperties()
+      handleImages()
     }
 
     handleData()
-  }, [])
+  }, [currentPage])
 
   const handleDelete = async (id: string) => {
-    await DetailService.deleteDetailById(id)
-    setDetails(prev => prev.filter((item) => item.id !== id))
-    toast("Detalhe deletado", {
-      description: "Detalhe deletado com sucesso",
+    await ImageService.deleteImageById(id)
+    toast("Imagem deletada", {
+      description: "Imagem deletada com sucesso",
       action: {
         label: "Feito",
         onClick: () => { },
       },
     })
+    setImages((prev) => {
+      return prev.filter((item) => item.id !== id)
+    })
   }
 
-  if (details.length === 0) {
+  if (images.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
-        <Info className="h-12 w-12 text-gray-400 mb-3" />
+        <Building2 className="h-12 w-12 text-gray-400 mb-3" />
         <p className="text-gray-500 mb-4">Nenhum item encontrado</p>
         <Dialog onOpenChange={(open) => setIsCreating(open)} open={isCreating}>
           <DialogTrigger asChild>
             <Button className="cursor-pointer">Criar novo</Button>
           </DialogTrigger>
           <DialogContent>
-            <DetailComponent onClose={() => setIsCreating(false)} />
+            <Image onClose={() => setIsCreating(false)} />
           </DialogContent>
         </Dialog>
       </div>
@@ -97,48 +113,61 @@ export const DetailCard = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
-      {details.map((detail) => (
+      {images.map((image) => (
         <Card
-          key={detail.id}
+          key={image.id}
           className="bg-white/90 backdrop-blur-sm rounded-xl shadow-sm border border-white/20 p-5 transition-all duration-200 hover:shadow-md hover:bg-white/95"
         >
           <div>
-
             <div className="flex items-center gap-2 mb-3">
               <Badge variant="secondary" className="bg-blue-100 text-blue-700">
-                {detail.propertyName}
+                {image.propertyName}
               </Badge>
             </div>
 
-            <div className="space-y-2 mb-4">
-              <div className="text-sm">
-                <span className="text-gray-500">Descrição:</span>
-                <span className="font-medium text-gray-800 ml-2 break-words max-w-[200px]">
-                  {detail.description}
-                </span>
+            <div className="space-y-4">
+              <div className="relative w-full h-48 rounded-md overflow-hidden">
+                <ImageNext
+                  src={`https://drive.google.com/uc?export=view&id=${image.idDrive}`}
+                  alt={image.propertyName}
+                  fill
+                  className="object-cover"
+                />
+              </div>
 
+              <div className="space-y-2 mb-4">
+                <div className="text-sm">
+                  <span className="text-gray-500">Descrição:</span>
+                  <span className="font-medium text-gray-800 ml-2 break-words max-w-[200px]">
+                    {image.description}
+                  </span>
+                </div>
               </div>
             </div>
 
             <div className="flex gap-2">
-              <Dialog onOpenChange={(open) => {
-                if (!open) setSelectedDetailId(null)
-              }} open={selectedDetailId === detail.id}>
+              <Dialog
+                onOpenChange={(open) => {
+                  if (!open) setSelectedImageId(null)
+                }}
+                open={selectedImageId === image.id}
+              >
                 <DialogTrigger asChild>
                   <Button
                     size="sm"
                     variant="outline"
+                    onClick={() => setSelectedImageId(image.id)}
                     className="flex-1 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 hover:text-blue-800 cursor-pointer"
-                    onClick={() => setSelectedDetailId(detail.id)}
                   >
                     <Edit className="h-3 w-3 mr-1" />
                     Editar
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
-                  <DetailComponent onClose={() => setSelectedDetailId(null)} id={detail.id} />
+                  <Image onClose={() => setSelectedImageId(null)} id={image.id} />
                 </DialogContent>
               </Dialog>
+
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button
@@ -161,7 +190,7 @@ export const DetailCard = () => {
                     <AlertDialogCancel className="cursor-pointer">Cancelar</AlertDialogCancel>
                     <AlertDialogAction
                       className="bg-red-600 text-white hover:bg-red-700 cursor-pointer"
-                      onClick={() => handleDelete(detail.id)}
+                      onClick={() => handleDelete(image.id)}
                     >
                       Excluir
                     </AlertDialogAction>

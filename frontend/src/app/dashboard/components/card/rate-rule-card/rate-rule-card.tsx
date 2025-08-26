@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Edit, Trash2, DollarSign } from "lucide-react"
 import { toast } from "sonner"
-import { Property } from "@/../types/property"
+import type { Property } from "@/../types/property"
 import { RateRules } from "../../dialog/rate-rules/rate-rule"
 import {
   AlertDialog,
@@ -19,26 +19,27 @@ import {
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogTrigger,
-  AlertDialogTitle
+  AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { useEffect, useState } from "react"
 import { useDataContext } from "@/app/dashboard/context/use-data"
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
 
 export const RateRuleCard = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [selectedRateRuleId, setSelectedRateRuleId] = useState<string | null>(null)
+  const [isCreating, setIsCreating] = useState<boolean>(false)
   const [currentPage, setCurrentPage] = useState<number>(1)
   const { rules, setRules } = useDataContext()
   const [hasNext, setHasNext] = useState<boolean>(false)
 
   const mapDays = {
-    "MONDAY": "Segunda",
-    "TUESDAY": "Terça",
-    "WEDNESDAY": "Quarta",
-    "THURSDAY": "Quinta",
-    "FRIDAY": "Sexta",
-    "SATURDAY": "Sábado",
-    "SUNDAY": "Domingo"
+    MONDAY: "Segunda",
+    TUESDAY: "Terça",
+    WEDNESDAY: "Quarta",
+    THURSDAY: "Quinta",
+    FRIDAY: "Sexta",
+    SATURDAY: "Sábado",
+    SUNDAY: "Domingo",
   }
 
   const handleDate = (date: string) => {
@@ -76,9 +77,7 @@ export const RateRuleCard = () => {
       }
 
       const getProperties = async () => {
-        const idsProperties = Array.from(
-          new Set(rateRules.map((rateRule) => rateRule.propertyId))
-        )
+        const idsProperties = Array.from(new Set(rateRules.map((rateRule) => rateRule.propertyId)))
         const data = await PropertyService.getPropertiesByIds({ ids: idsProperties })
         properties.push(...data.properties)
       }
@@ -89,22 +88,24 @@ export const RateRuleCard = () => {
           propertyMap.set(property.id, property)
         }
 
-        const rulesProperties = rateRules.map((rateRule) => {
-          const property = propertyMap.get(rateRule.propertyId)
-          if (!property) return null
+        const rulesProperties = rateRules
+          .map((rateRule) => {
+            const property = propertyMap.get(rateRule.propertyId)
+            if (!property) return null
 
-          return {
-            id: rateRule.id,
-            propertyName: property.name,
-            startDate: rateRule.startDate,
-            endDate: rateRule.endDate,
-            days: rateRule.days,
-            minGuests: rateRule.minGuests,
-            maxGuests: rateRule.maxGuests,
-            minNights: rateRule.minNights,
-            pricePerNightCents: rateRule.pricePerNightCents,
-          }
-        }).filter((item) => item !== null)
+            return {
+              id: rateRule.id,
+              propertyName: property.name,
+              startDate: rateRule.startDate,
+              endDate: rateRule.endDate,
+              days: rateRule.days,
+              minGuests: rateRule.minGuests,
+              maxGuests: rateRule.maxGuests,
+              minNights: rateRule.minNights,
+              pricePerNightCents: rateRule.pricePerNightCents,
+            }
+          })
+          .filter((item) => item !== null)
 
         setRules(rulesProperties)
       }
@@ -122,12 +123,12 @@ export const RateRuleCard = () => {
       <div className="flex flex-col items-center justify-center py-12">
         <DollarSign className="h-12 w-12 text-gray-400 mb-3" />
         <p className="text-gray-500 mb-4">Nenhum item encontrado</p>
-        <Dialog onOpenChange={() => setIsOpen(!isOpen)} open={isOpen}>
+        <Dialog onOpenChange={(open) => setIsCreating(open)} open={isCreating}>
           <DialogTrigger asChild>
             <Button className="cursor-pointer">Criar novo</Button>
           </DialogTrigger>
           <DialogContent>
-            <RateRules setIsOpen={setIsOpen} />
+            <RateRules onClose={() => setIsCreating(false)} />
           </DialogContent>
         </Dialog>
       </div>
@@ -151,11 +152,15 @@ export const RateRuleCard = () => {
             <div className="space-y-2 mb-4">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Hóspedes:</span>
-                <span className="font-medium text-gray-800">{rule.minGuests}-{rule.maxGuests} hóspedes</span>
+                <span className="font-medium text-gray-800">
+                  {rule.minGuests}-{rule.maxGuests} hóspedes
+                </span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Preço/noite:</span>
-                <span className="font-medium text-green-600">R$ {(rule.pricePerNightCents / 100).toString().replace(".", ",")}</span>
+                <span className="font-medium text-green-600">
+                  R$ {(rule.pricePerNightCents / 100).toString().replace(".", ",")}
+                </span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Mínimo:</span>
@@ -173,30 +178,33 @@ export const RateRuleCard = () => {
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Período:</span>
-                {
-                  rule.startDate && rule.endDate ? (
-                    <span className="font-medium text-xs text-gray-800">{handleDate(rule.startDate)} a {handleDate(rule.endDate)}</span>
-                  ) : (
-                    <span className="font-medium text-xs text-gray-800">Indeterminado</span>
-                  )
-                }
+                {rule.startDate && rule.endDate ? (
+                  <span className="font-medium text-xs text-gray-800">
+                    {handleDate(rule.startDate)} a {handleDate(rule.endDate)}
+                  </span>
+                ) : (
+                  <span className="font-medium text-xs text-gray-800">Indeterminado</span>
+                )}
               </div>
             </div>
 
             <div className="flex gap-2">
-              <Dialog onOpenChange={() => setIsOpen(!isOpen)} open={isOpen}>
-                <DialogTrigger>
+              <Dialog onOpenChange={(open) => {
+                if (!open) setSelectedRateRuleId(null)
+              }} open={rule.id === selectedRateRuleId}>
+                <DialogTrigger asChild>
                   <Button
                     size="sm"
                     variant="outline"
                     className="flex-1 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 hover:text-blue-800 cursor-pointer"
+                    onClick={() => setSelectedRateRuleId(rule.id)}
                   >
                     <Edit className="h-3 w-3 mr-1" />
                     Editar
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
-                  <RateRules id={rule.id} setIsOpen={setIsOpen} />
+                  <RateRules onClose={() => setSelectedRateRuleId(null)} id={rule.id} />
                 </DialogContent>
               </Dialog>
               <AlertDialog>

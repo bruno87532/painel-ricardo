@@ -8,7 +8,7 @@ import { useDataContext } from "@/app/dashboard/context/use-data"
 import { UseFormReturn } from "react-hook-form"
 
 export const useSurchargeTypeHook = (
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  onClose: () => void,
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
   form: UseFormReturn<SurchargeTypeFormDataType>,
   id?: string,
@@ -55,7 +55,7 @@ export const useSurchargeTypeHook = (
     })
 
     setIsLoading(false)
-    setIsOpen(false)
+    onClose()
   }
 
   return { handleSubmit }

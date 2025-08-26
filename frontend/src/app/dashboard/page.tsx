@@ -17,6 +17,8 @@ import { Surcharge } from "./components/dialog/surcharge/surcharge"
 import { SurchargeType } from "./components/dialog/surcharge-type/surcharge-type"
 import { DetailCard } from "./components/card/detail-card/detail-card"
 import { Detail } from "./components/dialog/detail/detail"
+import { Image } from "./components/dialog/image/image"
+import { ImageCard } from "./components/card/image-card/image-card"
 
 const PricingDashboard = () => {
   const [activeTab, setActiveTab] = useState<TabType>("properties")
@@ -34,6 +36,10 @@ const PricingDashboard = () => {
         return "Taxas"
       case "new-taxes":
         return "Nova Taxa"
+      case "details":
+        return "Novo Detalhe"
+      case "image": 
+        return "Nova Imagem"
       default:
         return ""
     }
@@ -44,7 +50,8 @@ const PricingDashboard = () => {
     { id: "rules", label: "Regras de Preço", icon: DollarSign },
     { id: "taxes", label: "Taxas", icon: Receipt },
     { id: "new-taxes", label: "Tipos de Taxas", icon: DollarSignIcon },
-    { id: "details", label: "Detalhes", icon: Info }
+    { id: "details", label: "Detalhes", icon: Info },
+    { id: "image", label: "Imagens", icon: Info }
   ]
 
   return (
@@ -95,6 +102,7 @@ const PricingDashboard = () => {
                   {activeTab === "taxes" && "Cadastrar Nova Taxa"}
                   {activeTab === "new-taxes" && "Cadastrar Novo Tipo de Taxa"}
                   {activeTab === "details" && "Cadastrar Novo Detalhe"}
+                  {activeTab === "image" && "Cadastrar Nova Imagem"}
                 </Button>
               </DialogTrigger>
               <DialogContent>
@@ -103,6 +111,7 @@ const PricingDashboard = () => {
                 {activeTab === "taxes" && <Surcharge setIsOpen={setIsOpen} />}
                 {activeTab === "new-taxes" && <SurchargeType setIsOpen={setIsOpen} />}
                 {activeTab === "details" && <Detail setIsOpen={setIsOpen} />}
+                {activeTab === "image" && <Image setIsOpen={setIsOpen} />}
               </DialogContent>
             </Dialog>
           </div>
@@ -111,6 +120,7 @@ const PricingDashboard = () => {
           {activeTab === "taxes" && <SurchargeCard />}
           {activeTab === "new-taxes" && <SurchargeTypeCard />}
           {activeTab === "details" && <DetailCard />}
+          {activeTab === "image" && <ImageCard />}
         </div>
       </div>
     </div>

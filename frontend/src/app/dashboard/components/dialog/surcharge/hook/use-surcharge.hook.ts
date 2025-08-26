@@ -11,7 +11,7 @@ import { UseFormReturn } from "react-hook-form"
 
 export const useSurchargeHook = (
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  onClose: () => void,
   form: UseFormReturn<SurchargeFormDataType>,
   id?: string
 ) => {
@@ -90,7 +90,7 @@ export const useSurchargeHook = (
     })
 
     setIsLoading(false)
-    setIsOpen(false)
+    onClose()
 
   }
 

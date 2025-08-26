@@ -24,7 +24,8 @@ import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
 import { SurchargeType } from "../../dialog/surcharge-type/surcharge-type"
 
 export const SurchargeTypeCard = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [selectedSurchargeTypeId, setSelectedSurchargeTypeId] = useState<string | null>(null)
+  const [isCreating, setIsCreating] = useState<boolean>(false)
   const { surchargeTypes, setSurchargeTypes } = useDataContext()
   const [currentPage, setCurrentPage] = useState<number>(1)
 
@@ -42,12 +43,12 @@ export const SurchargeTypeCard = () => {
       <div className="flex flex-col items-center justify-center py-12">
         <DollarSignIcon className="h-12 w-12 text-gray-400 mb-3" />
         <p className="text-gray-500 mb-4">Nenhum item encontrado</p>
-        <Dialog onOpenChange={() => setIsOpen(!isOpen)} open={isOpen}>
+        <Dialog onOpenChange={(open) => setIsCreating(open)} open={isCreating}>
           <DialogTrigger asChild>
             <Button className="cursor-pointer">Criar novo</Button>
           </DialogTrigger>
           <DialogContent>
-            <SurchargeType setIsOpen={setIsOpen} />
+            <SurchargeType onClose={() => setIsCreating(false)} />
           </DialogContent>
         </Dialog>
       </div>
@@ -56,7 +57,7 @@ export const SurchargeTypeCard = () => {
 
   const handleDelete = async (id: string) => {
     await SurchargeTypeService.deleteSurchargeTypeById(id)
-    toast("Tipo de Taxa desatualizada", {
+    toast("Tipo de Taxa deletada", {
       description: "Tipo de Taxa deletada com sucesso",
       action: {
         label: "Feito",
@@ -83,19 +84,25 @@ export const SurchargeTypeCard = () => {
               </Badge>
             </div>
             <div className="flex gap-2">
-              <Dialog>
+              <Dialog
+                onOpenChange={(open) => {
+                  if (!open) setSelectedSurchargeTypeId(null)
+                }}
+                open={selectedSurchargeTypeId === surchargeType.id}
+              >
                 <DialogTrigger asChild>
                   <Button
                     size="sm"
                     variant="outline"
                     className="flex-1 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 hover:text-blue-800 cursor-pointer"
+                    onClick={() => setSelectedSurchargeTypeId(surchargeType.id)}
                   >
                     <Edit className="h-3 w-3 mr-1" />
                     Editar
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
-                  <SurchargeType id={surchargeType.id} setIsOpen={setIsOpen} />
+                  <SurchargeType id={surchargeType.id} onClose={() => setSelectedSurchargeTypeId(null)} />
                 </DialogContent>
               </Dialog>
               <AlertDialog>

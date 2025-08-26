@@ -21,7 +21,8 @@ import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
 
 export const PropertyCard = () => {
   const { properties, setProperties } = useDataContext()
-  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
+  const [isCreating, setIsCreating] = useState<boolean>(false)
 
   useEffect(() => {
     const getProperties = async () => {
@@ -51,12 +52,12 @@ export const PropertyCard = () => {
       <div className="flex flex-col items-center justify-center py-12">
         <Building2 className="h-12 w-12 text-gray-400 mb-3" />
         <p className="text-gray-500 mb-4">Nenhum item encontrado</p>
-        <Dialog onOpenChange={() => setIsOpen(!isOpen)} open={isOpen}>
+        <Dialog onOpenChange={(open) => setIsCreating(open)} open={isCreating}>
           <DialogTrigger asChild>
             <Button className="cursor-pointer">Criar novo</Button>
           </DialogTrigger>
           <DialogContent>
-            <Property setIsOpen={setIsOpen} />
+            <Property onClose={() => setIsCreating(false)} />
           </DialogContent>
         </Dialog>
       </div>
@@ -86,19 +87,22 @@ export const PropertyCard = () => {
             </div>
 
             <div className="flex gap-2">
-              <Dialog onOpenChange={() => setIsOpen(!isOpen)} open={isOpen}>
+              <Dialog onOpenChange={(open) => {
+                if (!open) setSelectedPropertyId(null)
+              }} open={property.id === selectedPropertyId}>
                 <DialogTrigger asChild>
                   <Button
                     size="sm"
                     variant="outline"
                     className="flex-1 bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 hover:text-blue-800 cursor-pointer"
+                    onClick={() => setSelectedPropertyId(property.id)}
                   >
                     <Edit className="h-3 w-3 mr-1" />
                     Editar
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
-                  <Property id={property.id} setIsOpen={setIsOpen} />
+                  <Property id={property.id} onClose={() => setSelectedPropertyId(null)} />
                 </DialogContent>
               </Dialog>
 

@@ -12,10 +12,10 @@ import { Select, SelectTrigger, SelectContent, SelectValue, SelectItem } from "@
 import { useDataContext } from "@/app/dashboard/context/use-data"
 
 export const Detail: React.FC<{
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  onClose: () => void,
   id?: string,
 }> = ({
-  setIsOpen,
+  onClose,
   id
 }) => {
     const { properties } = useDataContext()
@@ -30,7 +30,7 @@ export const Detail: React.FC<{
       }
     })
     
-    const { handleSubmit } = useDetailHook(setIsLoading, setIsOpen, form, id)
+    const { handleSubmit } = useDetailHook(setIsLoading, onClose, form, id)
 
     return (
       <>

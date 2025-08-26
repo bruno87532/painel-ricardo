@@ -14,10 +14,10 @@ import { zodResolver } from "@hookform/resolvers/zod"
 
 export const Property: React.FC<{
   id?: string,
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  onClose: () => void
 }> = ({
   id,
-  setIsOpen
+  onClose
 }) => {
     const form = useForm<PropertyFormData>({
       resolver: zodResolver(propertySchema),
@@ -29,7 +29,7 @@ export const Property: React.FC<{
     })
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const { handleSubmit } = usePropertyHook(setIsLoading, setIsOpen, form, id)
+    const { handleSubmit } = usePropertyHook(setIsLoading, onClose, form, id)
 
     return (
       <>

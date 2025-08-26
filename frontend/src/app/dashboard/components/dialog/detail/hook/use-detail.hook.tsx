@@ -11,7 +11,7 @@ import { UseFormReturn } from "react-hook-form"
 
 export const useDetailHook = (
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  onClose: () => void,
   form: UseFormReturn<DetailFormDataType>,
   id?: string
 ) => {
@@ -67,7 +67,7 @@ export const useDetailHook = (
         onClick: () => { },
       },
     })
-    setIsOpen(false)
+    onClose()
     setIsLoading(false)
   }
 

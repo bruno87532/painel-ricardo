@@ -30,10 +30,10 @@ const daysOfWeek: {
 
 export const Surcharge: React.FC<{
   id?: string
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  onClose: () => void
 }> = ({
   id,
-  setIsOpen
+  onClose
 }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const { properties, surchargeTypes } = useDataContext()
@@ -50,8 +50,7 @@ export const Surcharge: React.FC<{
       },
     })
 
-    const { handleSubmit } = useSurchargeHook(setIsLoading, setIsOpen, form, id)
-    console.log(surchargeTypes.length)
+    const { handleSubmit } = useSurchargeHook(setIsLoading, onClose, form, id)
     if (properties.length === 0 || surchargeTypes.length === 0) {
       return (
         <div className="min-h-screen flex justify-center items-center">

@@ -5,6 +5,7 @@ import { GetPropertiesByIdsDto } from "./dto/get-properties-by-ids.dto";
 import { RateRuleService } from "../rate-rule/rate-rule.service";
 import { SurchargeService } from "../surcharge/surcharge.service";
 import { DetailService } from "../details/detail.service";
+import { ImageService } from "../image/image.service";
 
 @Injectable()
 export class PropertyService {
@@ -12,7 +13,8 @@ export class PropertyService {
     private readonly detailService: DetailService,
     private readonly prismaService: PrismaService,
     private readonly surchargeService: SurchargeService,
-    private readonly rateRuleService: RateRuleService
+    private readonly rateRuleService: RateRuleService,
+    private readonly imageService: ImageService,
   ) { }
 
   async createProperty(data: CreateUpdatePropertyDto) {
@@ -61,6 +63,7 @@ export class PropertyService {
       await this.rateRuleService.deleteRateRuleByIdProperty(id)
       await this.surchargeService.deleteSurchargeByIdProperty(id)
       await this.detailService.deleteDetailByIdProperty(id)
+      await this.imageService.deleteImageByIdProperty(id)
 
       const property = await this.prismaService.property.delete({
         where: { id }

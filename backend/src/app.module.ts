@@ -8,9 +8,11 @@ import { RateRuleModule } from './modules/rate-rule/rate-rule.module';
 import { SurchargeModule } from './modules/surcharge/surcharge.module';
 import { SurchargeTypeModule } from './modules/surcharge-type/surcharge-type.module';
 import { DetailModule } from './modules/details/detail.module';
+import { ImageModule } from './modules/image/image.module';
 
 @Module({
   imports: [
+    ImageModule,
     DetailModule,
     SurchargeTypeModule,
     SurchargeModule,

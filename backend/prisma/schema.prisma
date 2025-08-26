@@ -77,10 +77,11 @@ model Detail {
 }
 
 model Image {
-  id         String   @id @default(uuid())
-  propertyId String
-  property   Property @relation(fields: [propertyId], references: [id])
-  idDrive    String
+  id          String   @id @default(uuid())
+  propertyId  String
+  property    Property @relation(fields: [propertyId], references: [id])
+  idDrive     String
+  description String   @default("")
 }
 
 model Video {

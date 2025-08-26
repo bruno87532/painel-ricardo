@@ -6,6 +6,7 @@ import { SurchargeProperty } from "@/../types/surcharge-property";
 import { SurchargeType } from "@/../types/surcharge-type";
 import { RuleProperty } from "@/../types/rule-property";
 import { DetailProperty } from "@/../types/detail-property";
+import { ImageProperty } from "@/../types/image-property";
 
 type DataContext = {
   surchargeTypes: SurchargeType[];
@@ -17,7 +18,9 @@ type DataContext = {
   surcharges: SurchargeProperty[];
   setSurcharges: React.Dispatch<React.SetStateAction<SurchargeProperty[]>>;
   details: DetailProperty[];
-  setDetails: React.Dispatch<React.SetStateAction<DetailProperty[]>>
+  setDetails: React.Dispatch<React.SetStateAction<DetailProperty[]>>;
+  images: ImageProperty[];
+  setImages: React.Dispatch<React.SetStateAction<ImageProperty[]>>
 }
 
 const DataContext = createContext<DataContext | undefined>(undefined)
@@ -28,12 +31,26 @@ export const DataProvider: React.FC<{
   const [surchargeTypes, setSurchargeTypes] = useState<SurchargeType[]>([])
   const [properties, setProperties] = useState<Property[]>([])
   const [rules, setRules] = useState<RuleProperty[]>([])
+  const [images, setImages] = useState<ImageProperty[]>([])
   const [surcharges, setSurcharges] = useState<SurchargeProperty[]>([])
   const [details, setDetails] = useState<DetailProperty[]>([])
 
   return (
-    <DataContext.Provider value={{ surchargeTypes, setSurchargeTypes, properties, setProperties, rules, setRules, surcharges, setSurcharges, details, setDetails }}>
-      { children }
+    <DataContext.Provider value={{
+      surchargeTypes,
+      setSurchargeTypes,
+      properties,
+      setProperties,
+      rules,
+      setRules,
+      surcharges,
+      setSurcharges,
+      details,
+      setDetails,
+      images,
+      setImages
+    }}>
+      {children}
     </DataContext.Provider>
   )
 }

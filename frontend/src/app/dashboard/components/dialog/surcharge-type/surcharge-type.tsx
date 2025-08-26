@@ -17,10 +17,10 @@ import { useSurchargeTypeHook } from "./hook/use-surcharge-type.hook"
 
 export const SurchargeType: React.FC<{
   id?: string,
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  onClose: () => void
 }> = ({
   id,
-  setIsOpen
+  onClose
 }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [surchargeType, setSurchargeType] = useState<{
@@ -34,7 +34,7 @@ export const SurchargeType: React.FC<{
       }
     })
 
-    const { handleSubmit } = useSurchargeTypeHook(setIsOpen, setIsLoading, form, id)
+    const { handleSubmit } = useSurchargeTypeHook(onClose, setIsLoading, form, id)
 
     if (id && surchargeType?.name) {
       return (

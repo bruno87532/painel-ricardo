@@ -7,7 +7,7 @@ import { UseFormReturn } from "react-hook-form"
 
 export const usePropertyHook = (
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  onClose: () => void,
   form: UseFormReturn<PropertyFormData>,
   id?: string,
 ) => {
@@ -55,7 +55,7 @@ export const usePropertyHook = (
     })
 
     setIsLoading(false)
-    setIsOpen(false)
+    onClose()
   }
 
   return { handleSubmit }

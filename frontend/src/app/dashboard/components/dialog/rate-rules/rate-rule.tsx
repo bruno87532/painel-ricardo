@@ -27,10 +27,10 @@ const daysOfWeek: { value: WeekDays; label: string }[] = [
 
 export const RateRules: React.FC<{
   id?: string,
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  onClose: () => void
 }> = ({
   id,
-  setIsOpen
+  onClose
 }) => {
     const [isLoading, setIsLoading] = useState(false)
     const { properties } = useDataContext()
@@ -49,7 +49,7 @@ export const RateRules: React.FC<{
       },
     })
 
-    const { handleSubmit } = useRateRulesHook(setIsLoading, setIsOpen, form, id)
+    const { handleSubmit } = useRateRulesHook(setIsLoading, onClose, form, id)
 
     if (properties.length === 0) {
       return (
