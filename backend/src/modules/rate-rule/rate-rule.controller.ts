@@ -13,7 +13,7 @@ export class RateRuleController {
   }
 
   @Get() 
-  async getRateRules(@Query("page") page: number) {
+  async getRateRules(@Query("page") page?: number) {
     return await this.rateRuleService.getRateRules(page)
   }
 

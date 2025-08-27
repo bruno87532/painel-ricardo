@@ -52,7 +52,7 @@ export class DetailService {
   async getDetails(page?: number) {
     try {
       const quantity = page ? await this.prismaService.detail.count() : 0
-      const limit = 10
+      const limit = 12
 
       const options: { skip?: number; take?: number } = page ? { skip: (page - 1) * limit, take: limit } : {}
       const details = await this.prismaService.detail.findMany(options)
@@ -61,6 +61,8 @@ export class DetailService {
 
       return {
         details,
+        ...(page ? { quantity } : {}),
+        ...(page ? { lastPage: Math.ceil(quantity / 12) } : {}),
         ...(page ? { hasNext: quantity > limit * page } : {})
       }
     } catch (error) {

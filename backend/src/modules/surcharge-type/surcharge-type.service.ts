@@ -40,7 +40,7 @@ export class SurchargeTypeService {
 
   async getSurchargeTypes(page?: number) {
     try {
-      const limit = 10
+      const limit = 12
       const quantity = page ? await this.prismaService.surchargeType.count() : 0
 
       const options: { skip?: number; take?: number } = page
@@ -53,6 +53,8 @@ export class SurchargeTypeService {
 
       return {
         surchargeTypes,
+        ...(page ? { quantity } : {}),
+        ...(page ? { lastPage: Math.ceil(quantity / 12) } : {}),
         ...(page ? { hasNext: quantity > limit * page } : {})
       }
     } catch (error) {

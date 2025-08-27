@@ -33,21 +33,25 @@ export class RateRuleService {
     }
   }
 
-  async getRateRules(page: number) {
+  async getRateRules(page?: number) {
     try {
-      
-      const limit = 10
-      const quantity = await this.prismaService.rateRule.count()
-      const rateRules = await this.prismaService.rateRule.findMany({
-        skip: (page - 1) * limit,
+      const limit = 12
+      const quantity = page ? await this.prismaService.rateRule.count() : 0
+
+      const options: { skip?: number; take?: number } = page ? {
+        skip: limit * (page - 1),
         take: limit
-      })
+      } : { }
       
+      const rateRules = await this.prismaService.rateRule.findMany(options)
+
       if (!rateRules) throw new NotFoundException("rateRule not found")
 
       return {
         rateRules,
-        hasNext: quantity > page * limit 
+        ...(page ? { quantity } : {}),
+        ...(page ? { lastPage: Math.ceil(quantity / 12) } : {}),
+        ...(page ? { hasNext: quantity > limit * page } : {})
       }
     } catch (error) {
       if (error instanceof HttpException) throw error

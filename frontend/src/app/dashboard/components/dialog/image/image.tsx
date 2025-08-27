@@ -20,7 +20,6 @@ export const Image: React.FC<{
   onClose: () => void;
   id?: string;
 }> = ({ onClose, id }) => {
-  console.log(id)
   const form = useForm<ImageFormDataType>({
     resolver: zodResolver(ImageFormData),
     defaultValues: {

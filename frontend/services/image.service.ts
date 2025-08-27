@@ -31,7 +31,10 @@ export class ImageService {
   }
 
   static async getImages(page: number): Promise<{
-    images: ImageReturn[]
+    images: ImageReturn[],
+    hasNext: boolean,
+    lastPage: number,
+    quantity: number,
   }> {
     const images = await axios.get(this.pathBackend + "/image/?page=" + page, {
       headers: {
@@ -40,7 +43,10 @@ export class ImageService {
       withCredentials: true
     })
     return {
-      images: images.data.images
+      images: images.data.images,
+      hasNext: images.data.hasNext,
+      lastPage: images.data.lastPage,
+      quantity: images.data.quantity,
     }
   }
 
@@ -53,7 +59,7 @@ export class ImageService {
       },
       withCredentials: true
     })
-    
+
     return {
       image: image.data
     }

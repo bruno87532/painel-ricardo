@@ -48,7 +48,10 @@ export class SurchargeService {
   }
 
   static async getSurcharges(page: number): Promise<{
-    surcharges: Surcharge[]
+    surcharges: Surcharge[],
+    hasNext: boolean,
+    lastPage: number,
+    quantity: number,
   }> {
     const surcharges = await axios.get(this.pathBackend + "/surcharge?page=" + page, {
       headers: {
@@ -58,7 +61,10 @@ export class SurchargeService {
     })
 
     return {
-      surcharges: surcharges.data.surcharges
+      surcharges: surcharges.data.surcharges,
+      hasNext: surcharges.data.hasNext,
+      lastPage: surcharges.data.lastPage,
+      quantity: surcharges.data.quantity
     }
   }
 
@@ -89,6 +95,6 @@ export class SurchargeService {
 
     return {
       surcharge: surcharge.data
-    } 
+    }
   }
 }

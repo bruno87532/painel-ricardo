@@ -27,10 +27,13 @@ export class PropertyService {
     }
   }
 
-  static async getProperties(): Promise<{
-    properties: Property[]
+  static async getProperties(page?: number): Promise<{
+    properties: Property[],
+    hasNext: boolean,
+    lastPage: number,
+    quantity: number,
   }> {
-    const properties = await axios.get(this.pathBackend + "/property/", {
+    const properties = await axios.get(this.pathBackend + `/property/${page ? `?page=${page}` : ""}`, {
       headers: {
         "Content-Type": "application/json"
       },
@@ -38,7 +41,10 @@ export class PropertyService {
     })
 
     return {
-      properties: properties.data
+      properties: properties.data.properties,
+      hasNext: properties.data.hasNext,
+      lastPage: properties.data.lastPage,
+      quantity: properties.data.quantity
     }
   }
 

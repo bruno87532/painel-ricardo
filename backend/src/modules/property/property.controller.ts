@@ -1,4 +1,4 @@
-import { Controller, Post, UsePipes, ValidationPipe, Body, Put, Get, Param, Delete, HttpCode, HttpStatus } from "@nestjs/common";
+import { Controller, Post, UsePipes, ValidationPipe, Body, Put, Get, Param, Delete, HttpCode, HttpStatus, Query } from "@nestjs/common";
 import { PropertyService } from "./property.service";
 import { CreateUpdatePropertyDto } from "./dto/create-update-property.dto";
 import { GetPropertiesByIdsDto } from "./dto/get-properties-by-ids.dto";
@@ -20,8 +20,8 @@ export class PropertyController {
   }
 
   @Get()
-  async getProperties() {
-    return await this.propertyService.getProperties()
+  async getProperties(@Query("page") page?: number) {
+    return await this.propertyService.getProperties(page)
   }
 
   @Get("/:id")

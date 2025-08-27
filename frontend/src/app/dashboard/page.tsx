@@ -106,12 +106,12 @@ const PricingDashboard = () => {
                 </Button>
               </DialogTrigger>
               <DialogContent>
-                {activeTab === "properties" && <Property setIsOpen={setIsOpen} />}
-                {activeTab === "rules" && <RateRules setIsOpen={setIsOpen} />}
-                {activeTab === "taxes" && <Surcharge setIsOpen={setIsOpen} />}
-                {activeTab === "new-taxes" && <SurchargeType setIsOpen={setIsOpen} />}
-                {activeTab === "details" && <Detail setIsOpen={setIsOpen} />}
-                {activeTab === "image" && <Image setIsOpen={setIsOpen} />}
+                {activeTab === "properties" && <Property onClose={() => setIsOpen(false)} />}
+                {activeTab === "rules" && <RateRules onClose={() => setIsOpen(false)} />}
+                {activeTab === "taxes" && <Surcharge onClose={() => setIsOpen(false)} />}
+                {activeTab === "new-taxes" && <SurchargeType onClose={() => setIsOpen(false)} />}
+                {activeTab === "details" && <Detail onClose={() => setIsOpen(false)} />}
+                {activeTab === "image" && <Image onClose={() => setIsOpen(false)} />}
               </DialogContent>
             </Dialog>
           </div>

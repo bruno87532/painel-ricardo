@@ -38,6 +38,9 @@ export class SurchargeTypeService {
 
   static async getSurchargeTypes(page?: number): Promise<{
     surchargeTypes: SurchargeType[],
+    hasNext: boolean,
+    lastPage: number,
+    quantity: number,
   }> {
     const surchargeTypes = await axios.get(`${this.pathBackend}/surcharge-type${page ? `?page=${page}` : ""}`, {
       headers: {
@@ -46,7 +49,10 @@ export class SurchargeTypeService {
       withCredentials: true
     })
     return {
-      surchargeTypes: surchargeTypes.data.surchargeTypes
+      surchargeTypes: surchargeTypes.data.surchargeTypes,
+      hasNext: surchargeTypes.data.hasNext,
+      lastPage: surchargeTypes.data.lastPage,
+      quantity: surchargeTypes.data.quantity
     }
   }
 

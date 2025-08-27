@@ -69,7 +69,9 @@ export class RateRuleService {
 
   static async getRateRules(page: number): Promise<{
     rateRules: RateRule[],
-    hasNext: boolean
+    hasNext: boolean,
+    lastPage: number,
+    quantity: number,
   }> {
     const rateRules = await axios.get(this.pathBackend + "/rate-rule?page=" + page, {
       headers: {
@@ -78,7 +80,12 @@ export class RateRuleService {
       withCredentials: true
     })
 
-    return rateRules.data
+    return {
+      rateRules: rateRules.data.rateRules,
+      hasNext: rateRules.data.hasNext,
+      lastPage: rateRules.data.lastPage,
+      quantity: rateRules.data.quantity
+    }
   }
 
   static async deleteRateRuleById(id: string) {

@@ -30,13 +30,24 @@ export class PropertyService {
     }
   }
 
-  async getProperties() {
+  async getProperties(page?: number) {
     try {
-      const properties = await this.prismaService.property.findMany({})
+      const limit = 12
+      const quantity = page ? await this.prismaService.property.count() : 0
+      const options: { skip?: number; take?: number } = page ? {
+        skip: limit * (page - 1),
+        take: limit
+      } : {}
+      const properties = await this.prismaService.property.findMany(options)
 
       if (!properties) throw new NotFoundException("Properties not found")
 
-      return properties
+      return {
+        properties,
+        ...(page ? { quantity } : {}),
+        ...(page ? { lastPage: Math.ceil(quantity / 12) } : {}),
+        ...(page ? { hasNext: quantity > limit * page } : {})
+      }
     } catch (error) {
       if (error instanceof HttpException) throw error
       console.error("An error ocurred while fetching all properties", error)

@@ -67,7 +67,7 @@ export class ImageService {
   async getImages(page?: number) {
     try {
       const quantity = page ? await this.prismaService.image.count() : 0
-      const limit = 10
+      const limit = 12
       const options: { skip?: number; take?: number } = page ? {
         skip: (page - 1) * limit,
         take: limit
@@ -79,7 +79,9 @@ export class ImageService {
 
       return {
         images,
-        ...(page ? { hasNext: quantity > page * limit } : {})
+        ...(page ? { quantity } : {}),
+        ...(page ? { lastPage: Math.ceil(quantity / 12) } : {}),
+        ...(page ? { hasNext: quantity > limit * page } : {})
       }
     } catch (error) {
       console.error("An error ocurred while fetching images", error)
@@ -110,7 +112,7 @@ export class ImageService {
           propertyId: idProperty
         }
       })
-      
+
       return images
     } catch (error) {
       console.error("An error ocurred while deleting image with idProperty", idProperty, error)

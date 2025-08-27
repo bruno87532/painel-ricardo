@@ -13,7 +13,7 @@ export class DetailService {
         "Content-Type": "application/json"
       },
       withCredentials: true
-    })   
+    })
 
     return {
       detail: detail.data
@@ -35,10 +35,13 @@ export class DetailService {
     }
   }
 
-  static async getDetails(): Promise<{
-    details: Detail[]
+  static async getDetails(page?: number): Promise<{
+    details: Detail[],
+    hasNext: boolean,
+    lastPage: number,
+    quantity: number,
   }> {
-    const details = await axios.get(this.pathBackend + "/detail", {
+    const details = await axios.get(this.pathBackend + `/detail/${page ? `?page=${page}` : ""}`, {
       headers: {
         "Content-Type": "application/json"
       },
@@ -46,7 +49,10 @@ export class DetailService {
     })
 
     return {
-      details: details.data.details
+      details: details.data.details,
+      hasNext: details.data.hasNext,
+      lastPage: details.data.lastPage,
+      quantity: details.data.quantity
     }
   }
 
@@ -65,7 +71,7 @@ export class DetailService {
 
   static async updateDetailById(id: string, data: {
     description: string,
-    propertyId: string 
+    propertyId: string
   }): Promise<{ detail: Detail }> {
     const detail = await axios.put(this.pathBackend + "/detail/" + id, data, {
       headers: {

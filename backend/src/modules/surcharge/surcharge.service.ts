@@ -8,7 +8,7 @@ export class SurchargeService {
 
   async getSurchages(page: number) {
     try {
-      const limit = 10
+      const limit = 12
       const quantity = await this.prismaService.surcharge.count()
       const surcharges = await this.prismaService.surcharge.findMany({
         skip: limit * (page - 1),
@@ -19,7 +19,9 @@ export class SurchargeService {
 
       return {
         surcharges,
-        hasNext: quantity > limit * page
+        ...(page ? { quantity } : {}),
+        ...(page ? { lastPage: Math.ceil(quantity / 12) } : {}),
+        ...(page ? { hasNext: quantity > limit * page } : {})
       }
     } catch (error) {
       if (error instanceof HttpException) throw error
@@ -85,9 +87,9 @@ export class SurchargeService {
   }
 
   async deleteSurchargeByIdSurchargeType(idSurchargeType: string) {
-    try { 
+    try {
       const surcharges = await this.prismaService.surcharge.deleteMany({ where: { surchargeTypeId: idSurchargeType } })
-    
+
       return surcharges
     } catch (error) {
       console.error("An error ocurred while deleting surcharge with idSurchargeType", idSurchargeType, error)
