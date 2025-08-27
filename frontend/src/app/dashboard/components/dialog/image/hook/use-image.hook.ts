@@ -26,7 +26,7 @@ export const useImageHook = (
     }
 
     getProperties()
-  }, [])
+  }, [setProperties])
 
   useEffect(() => {
     const getImage = async () => {
@@ -47,7 +47,7 @@ export const useImageHook = (
     }
 
     getImage()
-  }, [])
+  }, [form, id, setImagePreview])
 
   const handleSubmit = async (data: ImageFormDataType) => {
     setIsLoading(true)

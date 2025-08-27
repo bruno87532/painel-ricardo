@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
 import { AuthService } from "../../../services/auth.service"
@@ -24,6 +24,7 @@ type FormSchema = z.infer<typeof FormSchema>
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState<boolean>(false)
+  const router = useRouter()
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(FormSchema),
@@ -37,6 +38,7 @@ const Auth = () => {
     setIsLoading(true)
     try {
       await AuthService.login(data)
+      router.push("/dashboard")
     } catch (error) {
       if (error instanceof AxiosError && error.response?.status === 401) {
         form.setError("password", {
@@ -101,7 +103,7 @@ const Auth = () => {
               />
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 cursor-pointer"
                 disabled={isLoading}
               >
                 {isLoading ? (

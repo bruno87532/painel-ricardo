@@ -5,7 +5,7 @@ export type RuleProperty = {
   propertyName: string;
   minGuests: number;
   maxGuests: number;
-  pricePerNightCents: number;
+  pricePerNightCents: string;
   minNights: number;
   days: WeekDays[];
   startDate: string;

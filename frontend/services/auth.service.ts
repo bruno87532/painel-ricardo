@@ -19,4 +19,13 @@ export class AuthService {
       }
     )
   }
+
+  static async logout() {
+    await axios.get(this.pathBackend + "/auth/logout", {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      withCredentials: true
+    })
+  }
 }

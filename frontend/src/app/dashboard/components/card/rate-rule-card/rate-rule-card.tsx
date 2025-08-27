@@ -24,6 +24,7 @@ import {
 import { useEffect, useState } from "react"
 import { useDataContext } from "@/app/dashboard/context/use-data"
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
+import { makePrice } from "@/../common/functions/make-price"
 
 export const RateRuleCard = () => {
   const [selectedRateRuleId, setSelectedRateRuleId] = useState<string | null>(null)
@@ -106,7 +107,7 @@ export const RateRuleCard = () => {
               minGuests: rateRule.minGuests,
               maxGuests: rateRule.maxGuests,
               minNights: rateRule.minNights,
-              pricePerNightCents: rateRule.pricePerNightCents,
+              pricePerNightCents: makePrice(rateRule.pricePerNightCents),
             }
           })
           .filter((item) => item !== null)
@@ -120,7 +121,7 @@ export const RateRuleCard = () => {
     }
 
     handleData()
-  }, [currentPage])
+  }, [currentPage, setRules])
 
   if (rules.length === 0) {
     return (
@@ -164,7 +165,7 @@ export const RateRuleCard = () => {
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">Preço/noite:</span>
                   <span className="font-medium text-green-600">
-                    R$ {(rule.pricePerNightCents / 100).toString().replace(".", ",")}
+                    R$ {rule.pricePerNightCents}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">

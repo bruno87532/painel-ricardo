@@ -29,7 +29,7 @@ export const useDetailHook = (
     }
 
     getDetailById()
-  }, [])
+  }, [form, id])
 
   useEffect(() => {
     const getProperties = async () => {
@@ -38,7 +38,7 @@ export const useDetailHook = (
     }
 
     getProperties()
-  }, [])
+  }, [setProperties])
 
   const handleSubmit = async (data: DetailFormDataType) => {
     setIsLoading(true)

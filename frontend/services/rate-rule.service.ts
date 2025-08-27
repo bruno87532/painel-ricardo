@@ -12,7 +12,7 @@ export class RateRuleService {
     days: WeekDays[],
     minGuests: number,
     maxGuests: number,
-    pricePerNightCents: number,
+    pricePerNightCents: string,
     minNights: number
   }): Promise<{
     rateRule: RateRule
@@ -36,7 +36,7 @@ export class RateRuleService {
     days: WeekDays[],
     minGuests: number,
     maxGuests: number,
-    pricePerNightCents: number,
+    pricePerNightCents: string,
     minNights: number
   }): Promise<{
     rateRule: RateRule

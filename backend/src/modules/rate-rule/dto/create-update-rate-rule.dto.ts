@@ -50,6 +50,10 @@ export class CreateUpdateRateRuleDto {
   @Min(1)
   maxGuests: number
 
+  @Transform(({ value }) => {
+    if (value === undefined || value === null || value === "") return undefined
+    return Number(value)
+  })
   @IsNumber()
   @Type(() => Number)
   @IsDefined()
@@ -61,6 +65,6 @@ export class CreateUpdateRateRuleDto {
   @IsDefined()
   @Min(1)
   minNights: number
-} 
+}
 
 

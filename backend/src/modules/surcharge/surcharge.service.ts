@@ -1,6 +1,6 @@
 import { HttpException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import { CreateSurchargeDto } from "./dto/create-surcharge.dto";
+import { CreateUpdateSurchargeDto } from "./dto/create-update-surcharge.dto";
 
 @Injectable()
 export class SurchargeService {
@@ -30,7 +30,7 @@ export class SurchargeService {
     }
   }
 
-  async createSurcharge(data: CreateSurchargeDto) {
+  async createSurcharge(data: CreateUpdateSurchargeDto) {
     try {
       const surcharge = await this.prismaService.surcharge.create({
         data
@@ -43,7 +43,7 @@ export class SurchargeService {
     }
   }
 
-  async updateSurchargeById(data: CreateSurchargeDto, id: string) {
+  async updateSurchargeById(data: CreateUpdateSurchargeDto, id: string) {
     try {
       const surcharge = await this.prismaService.surcharge.update({
         where: { id },
@@ -77,7 +77,6 @@ export class SurchargeService {
       })
 
       if (!surcharge) throw new NotFoundException("Surcharge not found")
-
       return surcharge
     } catch (error) {
       if (error instanceof HttpException) throw error

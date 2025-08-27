@@ -10,7 +10,7 @@ export class SurchargeService {
     days: WeekDays[],
     startDate?: Date,
     endDate?: Date,
-    amountCents: number,
+    amountCents: string,
     appliesPerNight: boolean
   }): Promise<{
     surcharge: Surcharge
@@ -21,9 +21,8 @@ export class SurchargeService {
       },
       withCredentials: true
     })
-
     return {
-      surcharge: dataDb.data.surcharge
+      surcharge: dataDb.data
     }
   }
 
@@ -32,7 +31,7 @@ export class SurchargeService {
     days: WeekDays[],
     startDate?: Date,
     endDate?: Date,
-    amountCents: number,
+    amountCents: string,
     appliesPerNight: boolean
   }): Promise<{ surcharge: Surcharge }> {
     const surcharge = await axios.post(this.pathBackend + "/surcharge", data, {
@@ -92,7 +91,6 @@ export class SurchargeService {
       },
       withCredentials: true
     })
-
     return {
       surcharge: surcharge.data
     }

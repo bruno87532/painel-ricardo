@@ -8,14 +8,12 @@ export const Sidebar: React.FC<{
   sidebarItems: { id: string, label: string, icon: LucideIcon }[];
   sidebarOpen: boolean;
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setVisibleItems: React.Dispatch<React.SetStateAction<number>>;
   setActiveTab: React.Dispatch<React.SetStateAction<TabType>>;
   activeTab: TabType
 }> = ({
   sidebarItems,
   sidebarOpen,
   setSidebarOpen,
-  setVisibleItems,
   setActiveTab,
   activeTab
 }) => {
@@ -45,7 +43,6 @@ export const Sidebar: React.FC<{
                   key={item.id}
                   onClick={() => {
                     setActiveTab(item.id as TabType)
-                    setVisibleItems(10)
                     setSidebarOpen(false)
                   }}
                   className={`

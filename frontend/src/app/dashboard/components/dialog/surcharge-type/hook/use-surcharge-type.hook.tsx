@@ -25,7 +25,7 @@ export const useSurchargeTypeHook = (
     }
 
     getSurchargeTypeById()
-  }, [id])
+  }, [id, form])
 
   
   const { setSurchargeTypes, surchargeTypes } = useDataContext()

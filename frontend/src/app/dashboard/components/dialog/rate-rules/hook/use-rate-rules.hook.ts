@@ -7,8 +7,8 @@ import { useDataContext } from "@/app/dashboard/context/use-data"
 import { PropertyService } from "@/../services/property.service"
 import { toast } from "sonner"
 import { UseFormReturn } from "react-hook-form"
-import { RateRuleFormData } from "../schema/schema-rate-rule"
 import { RateRuleFormDataType } from "../schema/schema-rate-rule"
+import { makePrice } from "@/../common/functions/make-price"
 
 export const useRateRulesHook = (
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
@@ -29,10 +29,10 @@ export const useRateRulesHook = (
           days,
           minGuests,
           maxGuests,
-          pricePerNightCents,
           minNights,
-          startDate: new Date(startDate),
-          endDate: new Date(endDate),
+          ...(startDate ? { startDate: new Date(startDate) } : {}),
+          ...(endDate ? { endDate: new Date(endDate) } : {}),
+          pricePerNightCents: makePrice(pricePerNightCents),
         })
       }
     }
@@ -46,7 +46,7 @@ export const useRateRulesHook = (
       setProperties(data.properties)
     }
     getProperties()
-  }, [])
+  }, [setProperties])
 
   const handleSubmit = async (data: RateRuleFormDataType) => {
     setIsLoading(true)
@@ -59,6 +59,7 @@ export const useRateRulesHook = (
     const property = properties.find((item) => item.id === data.propertyId)
     if (!property) return
 
+    data.pricePerNightCents = (parseFloat(data.pricePerNightCents) * 100).toFixed(0)
     const dataDb = id ? await RateRuleService.updateRateRuleById(id, data) : await RateRuleService.createRateRule(data)
     const { days, endDate, startDate, maxGuests, minGuests, minNights, pricePerNightCents, propertyId } = dataDb.rateRule
     const newItem = {
@@ -68,10 +69,10 @@ export const useRateRulesHook = (
       maxGuests,
       minGuests,
       minNights,
-      pricePerNightCents,
       propertyId,
       propertyName: property.name,
-      id: dataDb.rateRule.id
+      id: dataDb.rateRule.id,
+      pricePerNightCents: makePrice(pricePerNightCents),
     }
 
     setRules((prev) => {

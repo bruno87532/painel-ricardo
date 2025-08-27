@@ -17,7 +17,7 @@ import { toast } from "sonner"
 
 export const DetailCard = () => {
   const [isCreating, setIsCreating] = useState<boolean>(false)
-  const { details, setDetails, properties } = useDataContext()
+  const { details, setDetails } = useDataContext()
   const [selectedDetailId, setSelectedDetailId] = useState<string | null>(null)
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [lastPage, setLastPage] = useState<number>(1)
@@ -71,7 +71,7 @@ export const DetailCard = () => {
     }
 
     handleData()
-  }, [currentPage])
+  }, [currentPage, setDetails])
 
   const handleDelete = async (id: string) => {
     await DetailService.deleteDetailById(id)

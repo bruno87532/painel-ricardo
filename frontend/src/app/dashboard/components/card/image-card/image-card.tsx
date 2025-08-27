@@ -84,7 +84,7 @@ export const ImageCard = () => {
     }
 
     handleData()
-  }, [currentPage])
+  }, [currentPage, setImages])
 
   const handleDelete = async (id: string) => {
     await ImageService.deleteImageById(id)

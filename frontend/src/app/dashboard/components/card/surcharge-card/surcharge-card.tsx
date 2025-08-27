@@ -28,6 +28,7 @@ import { toast } from "sonner"
 import { useDataContext } from "@/app/dashboard/context/use-data"
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
 import { Surcharge as SurchargeComponent } from "../../dialog/surcharge/surcharge"
+import { makePrice } from "../../../../../../common/functions/make-price"
 
 export const SurchargeCard = () => {
   const { surcharges, setSurcharges } = useDataContext()
@@ -104,9 +105,9 @@ export const SurchargeCard = () => {
           if (!property) return null
           const surchargeType = surchargeTypeMap.get(surcharge.surchargeTypeId)
           if (!surchargeType) return null
-
+          const newAmountCents = makePrice(surcharge.amountCents)
           return {
-            amountCents: surcharge.amountCents,
+            amountCents: newAmountCents,
             appliesPerNight: surcharge.appliesPerNight,
             days: surcharge.days,
             endDate: surcharge.endDate,
@@ -127,7 +128,7 @@ export const SurchargeCard = () => {
     }
 
     handleData()
-  }, [currentPage])
+  }, [currentPage, setSurcharges])
 
   const handleDelete = async (id: string) => {
     await SurchargeService.deleteSurchargeById(id)
@@ -182,7 +183,7 @@ export const SurchargeCard = () => {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">Valor:</span>
-                  <span className="font-medium text-green-600">R$ {(surcharge.amountCents / 100).toString().replace(".", ",")}</span>
+                  <span className="font-medium text-green-600">R$ {surcharge.amountCents}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">Aplicado por noite:</span>
@@ -281,7 +282,7 @@ export const SurchargeCard = () => {
             {`Página ${currentPage} de ${lastPage}`}
           </span>
           <span className="text-xs text-gray-500">
-            {`(Mostrando ${surcharges.length} de ${quantitySurcharges} taxas)`}
+            {`(Mostrando ${surcharges.length} de ${quantitySurcharges} propriedades)`}
           </span>
         </div>
 

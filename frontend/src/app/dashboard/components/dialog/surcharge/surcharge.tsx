@@ -14,6 +14,7 @@ import { DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useDataContext } from "@/app/dashboard/context/use-data"
 import { SurchargeFormData, SurchargeFormDataType } from "./schema/schema-surcharge"
 import { useSurchargeHook } from "./hook/use-surcharge.hook"
+import { maskPrice } from "../../../../../../common/functions/mask-price"
 
 const daysOfWeek: {
   value: WeekDays,
@@ -44,7 +45,7 @@ export const Surcharge: React.FC<{
         propertyId: "",
         startDate: undefined,
         endDate: undefined,
-        amountCents: 0,
+        amountCents: "00.00",
         days: [],
         appliesPerNight: false,
       },
@@ -220,7 +221,7 @@ export const Surcharge: React.FC<{
                         <SelectContent>
                           {
                             properties.map((property) => (
-                              <SelectItem value={property.id}>{property.name}</SelectItem>
+                              <SelectItem key={property.id} value={property.id}>{property.name}</SelectItem>
                             ))
                           }
                         </SelectContent>
@@ -269,15 +270,9 @@ export const Surcharge: React.FC<{
                       Valor da Taxa (R$)
                     </FormLabel>
                     <Input
-                      type="number"
-                      min={0}
-                      step={0.01}
-                      placeholder="50.00"
-                      className="h-11 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20"
-                      value={field.value / 100}
-                      onChange={(e) => field.onChange(Math.round((Number.parseFloat(e.target.value) || 0) * 100))}
-                      onBlur={field.onBlur}
-                      name={field.name}
+                      placeholder="0.00"
+                      onChange={(e) => field.onChange(maskPrice(e.target.value))}
+                      value={field.value}
                     />
                     <FormDescription className="text-xs text-gray-500">
                       Valor em reais da taxa adicional

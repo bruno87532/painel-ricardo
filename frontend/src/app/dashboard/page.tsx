@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
 import { Sidebar } from "./components/sidebar/sidebar"
 import { Menu as MenuPage } from "./components/menu/menu"
-import { Building2, DollarSign, Receipt, Menu, DollarSignIcon, Info } from "lucide-react"
+import { Building2, Receipt, Menu, DollarSignIcon, Info, Image as ImageIcon, ListChecks } from "lucide-react"
 import { PropertyCard } from "./components/card/property-card/property-card"
 import { SurchargeTypeCard } from "./components/card/surcharge-type-card/surcharge-type-card"
-import { RateRuleCard } from "./components/card/rate-rule-card/rate-rule-card" // Added import for RateRuleCard
+import { RateRuleCard } from "./components/card/rate-rule-card/rate-rule-card" 
 import { Property } from "./components/dialog/property/property"
 import { RateRules } from "./components/dialog/rate-rules/rate-rule"
 import { Surcharge } from "./components/dialog/surcharge/surcharge"
@@ -24,7 +24,6 @@ const PricingDashboard = () => {
   const [activeTab, setActiveTab] = useState<TabType>("properties")
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [visibleItems, setVisibleItems] = useState(10)
 
   const getCurrentTitle = () => {
     switch (activeTab) {
@@ -47,11 +46,11 @@ const PricingDashboard = () => {
 
   const sidebarItems = [
     { id: "properties", label: "Propriedades", icon: Building2 },
-    { id: "rules", label: "Regras de Preço", icon: DollarSign },
+    { id: "rules", label: "Regras de Preço", icon: ListChecks },
     { id: "taxes", label: "Taxas", icon: Receipt },
     { id: "new-taxes", label: "Tipos de Taxas", icon: DollarSignIcon },
     { id: "details", label: "Detalhes", icon: Info },
-    { id: "image", label: "Imagens", icon: Info }
+    { id: "image", label: "Imagens", icon: ImageIcon }
   ]
 
   return (
@@ -59,7 +58,6 @@ const PricingDashboard = () => {
       <MenuPage
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        setVisibleItems={setVisibleItems}
         sidebarItems={sidebarItems}
       />
 
@@ -71,7 +69,6 @@ const PricingDashboard = () => {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         setSidebarOpen={setSidebarOpen}
-        setVisibleItems={setVisibleItems}
         sidebarItems={sidebarItems}
         sidebarOpen={sidebarOpen}
       />

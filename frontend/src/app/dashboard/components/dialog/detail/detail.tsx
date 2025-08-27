@@ -69,7 +69,7 @@ export const Detail: React.FC<{
                       <SelectContent>
                         {
                           properties.map((property) => (
-                            <SelectItem value={property.id}>{property.name}</SelectItem>
+                            <SelectItem key={property.id} value={property.id}>{property.name}</SelectItem>
                           ))
                         }
                       </SelectContent>

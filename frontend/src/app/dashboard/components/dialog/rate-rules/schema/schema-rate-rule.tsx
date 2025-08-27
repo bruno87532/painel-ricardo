@@ -8,7 +8,10 @@ export const RateRuleFormData = z.object({
   days: z.array(z.enum(WeekDay)),
   minGuests: z.number().min(1, "Mínimo de hóspedes deve ser pelo menos 1"),
   maxGuests: z.number().min(1, "Máximo de hóspedes deve ser pelo menos 1"),
-  pricePerNightCents: z.number().min(1, "Preço deve ser maior que zero"),
+  pricePerNightCents: z.string()
+    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+      message: "O preço deve ser um número positivo"
+    }),
   minNights: z.number().min(1, "Permanência mínima deve ser pelo menos 1 noite"),
 }).refine((data) => data.maxGuests >= data.minGuests, {
   message: "Máximo de hóspedes deve ser maior ou igual ao mínimo",

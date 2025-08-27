@@ -7,6 +7,6 @@ export type SurchargeProperty = {
   days: WeekDays[];
   startDate: string;
   endDate: string;
-  amountCents: number;
+  amountCents: string;
   appliesPerNight: boolean;
 }

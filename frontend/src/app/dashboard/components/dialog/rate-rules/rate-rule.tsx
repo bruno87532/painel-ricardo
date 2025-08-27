@@ -9,11 +9,12 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { MapPin, Clock, Calendar, Users, DollarSign, Loader2 } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
-import { WeekDays } from "../../../../../../types/week-days"
+import { WeekDays } from "@/../types/week-days"
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { RateRuleFormDataType, RateRuleFormData } from "./schema/schema-rate-rule"
 import { useRateRulesHook } from "./hook/use-rate-rules.hook"
 import { useDataContext } from "@/app/dashboard/context/use-data"
+import { maskPrice } from "@/../common/functions/mask-price"
 
 const daysOfWeek: { value: WeekDays; label: string }[] = [
   { value: "MONDAY", label: "Segunda-feira" },
@@ -44,7 +45,7 @@ export const RateRules: React.FC<{
         days: [],
         minGuests: 1,
         maxGuests: 1,
-        pricePerNightCents: 0,
+        pricePerNightCents: "00.00",
         minNights: 1,
       },
     })
@@ -272,15 +273,9 @@ export const RateRules: React.FC<{
                       Preço por noite (R$)
                     </FormLabel>
                     <Input
-                      type="number"
-                      min={1}
-                      step={0.01}
-                      placeholder="100.00"
-                      className="h-11 border-gray-200 focus:border-blue-400 focus:ring-blue-400/20"
-                      value={field.value / 100}
-                      onChange={(e) => field.onChange(Math.round((Number.parseFloat(e.target.value) || 0) * 100))}
-                      onBlur={field.onBlur}
-                      name={field.name}
+                      placeholder="0.00"
+                      onChange={(e) => field.onChange(maskPrice(e.target.value))}
+                      value={field.value}
                     />
                     <FormMessage />
                   </FormItem>

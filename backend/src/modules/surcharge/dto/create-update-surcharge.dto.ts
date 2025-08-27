@@ -11,7 +11,7 @@ enum WeekDay {
   SUNDAY = "SUNDAY"
 }
 
-export class CreateSurchargeDto {
+export class CreateUpdateSurchargeDto {
   @IsString()
   @IsNotEmpty()
   @IsDefined()
@@ -24,6 +24,10 @@ export class CreateSurchargeDto {
   @MinLength(1)
   surchargeTypeId: string
 
+  @Transform(({ value }) => {
+    if (value === undefined || value === null || value === "") return undefined
+    return Number(value)
+  })
   @IsNumber()
   @Type(() => Number)
   @Min(1)

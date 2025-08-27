@@ -1,12 +1,14 @@
-import { Controller, Post, UseInterceptors, UploadedFile, ValidationPipe, UsePipes, Body, Put, Param, Get, Query, Delete } from "@nestjs/common";
+import { Controller, Post, UseInterceptors, UploadedFile, ValidationPipe, UsePipes, Body, Put, Param, Get, Query, Delete, UseGuards } from "@nestjs/common";
 import { ImageService } from "./image.service";
 import { CreateUpdateImageDto } from "./dto/create-update-image.dto";
 import { ImageInterceptor } from "common/interceptor/image.interceptor";
+import { AuthGuard } from "@nestjs/passport";
 
 @Controller("image")
 export class ImageController {
   constructor(private readonly imageService: ImageService) { }
-
+  
+  @UseGuards(AuthGuard("jwt"))
   @Post()
   @UseInterceptors(ImageInterceptor("file"))
   @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
@@ -17,6 +19,7 @@ export class ImageController {
     return await this.imageService.createImage(file, data)
   }
 
+  @UseGuards(AuthGuard("jwt"))
   @Put("/:id")
   @UseInterceptors(ImageInterceptor("file"))
   @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
@@ -38,6 +41,7 @@ export class ImageController {
     return await this.imageService.getImages(page)
   }
 
+  @UseGuards(AuthGuard("jwt"))
   @Delete("/:id")
   async deleteImageById(@Param("id") id: string) {
     return await this.imageService.deleteImageById(id)

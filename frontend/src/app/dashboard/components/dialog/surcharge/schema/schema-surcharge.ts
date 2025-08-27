@@ -7,7 +7,10 @@ export const SurchargeFormData = z.object({
   endDate: z.date().optional(),
   surchargeTypeId: z.string().min(1, "Selecione uma taxa"),
   days: z.array(z.enum(WeekDay)),
-  amountCents: z.number().min(1, "Valor deve ser maior que zero"),
+  amountCents: z.string()
+    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+      message: "O preço deve ser um número positivo"
+    }),
   appliesPerNight: z.boolean()
 })
 

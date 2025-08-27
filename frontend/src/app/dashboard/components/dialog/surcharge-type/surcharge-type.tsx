@@ -5,13 +5,10 @@ import { Form, FormMessage, FormLabel, FormItem, FormField } from "@/components/
 import { useForm } from "react-hook-form"
 import { Loader2 } from "lucide-react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { SurchargeTypeService } from "@/../services/surcharge-type.service"
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { toast } from "sonner"
 import { SurchargeTypeFormData, SurchargeTypeFormDataType } from "./schema/schema-surcharge-type"
 import { useSurchargeTypeHook } from "./hook/use-surcharge-type.hook"
 
@@ -23,9 +20,6 @@ export const SurchargeType: React.FC<{
   onClose
 }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [surchargeType, setSurchargeType] = useState<{
-      name: string
-    }>()
 
     const form = useForm<SurchargeTypeFormDataType>({
       resolver: zodResolver(SurchargeTypeFormData),
@@ -36,7 +30,7 @@ export const SurchargeType: React.FC<{
 
     const { handleSubmit } = useSurchargeTypeHook(onClose, setIsLoading, form, id)
 
-    if (id && surchargeType?.name) {
+    if (id) {
       return (
         <div className="min-h-screen flex justify-center items-center">
           <Loader2 className="h-15 w-15 animate-spin" />

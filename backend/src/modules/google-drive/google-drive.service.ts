@@ -99,7 +99,7 @@ export class GoogleDriveService {
 
       return [fileName, mimeType]
     } catch (error) {
-      console.error("An error ocurred while fetching metadatas from drive")
+      console.error("An error ocurred while fetching metadatas from drive", error)
       throw new InternalServerErrorException("An error ocurred while downloading image from drive")
     }
   }

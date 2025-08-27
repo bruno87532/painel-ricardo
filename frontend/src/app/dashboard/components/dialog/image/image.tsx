@@ -8,7 +8,6 @@ import { ImageIcon, X, MapPin, Upload, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
 import { ImageFormData, type ImageFormDataType } from "./schema/schema-property"
 import { useForm } from "react-hook-form"
@@ -95,7 +94,7 @@ export const Image: React.FC<{
             <FormField
               control={form.control}
               name="file"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700 flex items-center gap-2">
                     <ImageIcon className="h-4 w-4 text-blue-500" />

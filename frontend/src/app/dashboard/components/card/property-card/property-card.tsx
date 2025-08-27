@@ -40,7 +40,7 @@ export const PropertyCard = () => {
     }
 
     getProperties()
-  }, [currentPage])
+  }, [currentPage, setProperties])
 
   const handleDelete = async (id: string) => {
     await PropertyService.deletePropertyById(id)
