@@ -87,7 +87,7 @@ export const SurchargeTypeCard = () => {
 
               <div className="flex items-center gap-2 mb-3">
                 <Badge variant="secondary" className="bg-blue-100 text-blue-700">
-                  Nome: {surchargeType.name}
+                  {surchargeType.name}
                 </Badge>
               </div>
               <div className="flex gap-2">

@@ -20,13 +20,14 @@ import { PropertyService } from "@/../services/property.service"
 import { toast } from "sonner"
 import { Property } from "../../dialog/property/property"
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
+import { Badge } from "@/components/ui/badge"
 
 export const PropertyCard = () => {
   const { properties, setProperties } = useDataContext()
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [hasNext, setHasNext] = useState<boolean>(false)
   const [lastPage, setLastPage] = useState<number>(1)
-  const [quantityProperties, setQuantityProperties] = useState<number>(1) 
+  const [quantityProperties, setQuantityProperties] = useState<number>(1)
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
   const [isCreating, setIsCreating] = useState<boolean>(false)
 
@@ -82,7 +83,11 @@ export const PropertyCard = () => {
             className="bg-white/90 backdrop-blur-sm rounded-xl shadow-sm border border-white/20 p-5 transition-all duration-200 hover:shadow-md hover:bg-white/95"
           >
             <div>
-              <h3 className="font-semibold text-lg mb-2 text-gray-800">Nome: {property.name}</h3>
+              <div className="flex items-center gap-2 mb-3">
+                <Badge variant="secondary" className="bg-blue-100 text-blue-700">
+                  {property.name}
+                </Badge>
+              </div>
 
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
@@ -181,7 +186,7 @@ export const PropertyCard = () => {
         <Button
           variant="outline"
           size="sm"
-          className={`${hasNext ? "cursor-pointer": ""} bg-transparent`}
+          className={`${hasNext ? "cursor-pointer" : ""} bg-transparent`}
           disabled={!hasNext}
           onClick={() => setCurrentPage(prev => prev + 1)}
         >

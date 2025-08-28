@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
-import { Form, FormField, FormItem, FormMessage, FormLabel, FormDescription } from "@/components/ui/form"
+import { Form, FormField, FormItem, FormMessage, FormLabel } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { MapPin, Clock, Calendar, Users, DollarSign, Loader2 } from "lucide-react"
@@ -190,9 +190,6 @@ export const RateRules: React.FC<{
                         })
                       }
                     </div>
-                    <FormDescription className="text-xs text-gray-500">
-                      Selecione os dias em que esta regra se aplica
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

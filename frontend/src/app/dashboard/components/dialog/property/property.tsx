@@ -1,6 +1,6 @@
 "use client"
 
-import { Form, FormField, FormItem, FormLabel, FormDescription, FormMessage } from "@/components/ui/form"
+import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Home, Users, Loader2 } from "lucide-react"
 import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -65,9 +65,6 @@ export const Property: React.FC<{
                       onBlur={field.onBlur}
                       name={field.name}
                     />
-                    <FormDescription className="text-xs text-gray-500">
-                      Escolha um nome único e descritivo para sua propriedade
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -92,9 +89,6 @@ export const Property: React.FC<{
                       onBlur={field.onBlur}
                       name={field.name}
                     />
-                    <FormDescription className="text-xs text-gray-500">
-                      Número mínimo de pessoas que a propriedade pode acomodar
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -118,9 +112,6 @@ export const Property: React.FC<{
                       onBlur={field.onBlur}
                       name={field.name}
                     />
-                    <FormDescription className="text-xs text-gray-500">
-                      Número máximo de pessoas que a propriedade pode acomodar
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
