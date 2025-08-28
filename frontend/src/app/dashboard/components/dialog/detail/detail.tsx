@@ -14,9 +14,14 @@ import { useDataContext } from "@/app/dashboard/context/use-data"
 export const Detail: React.FC<{
   onClose: () => void,
   id?: string,
+  data?: {
+    propertyId: string,
+    description: string
+  }
 }> = ({
   onClose,
-  id
+  id,
+  data
 }) => {
     const { properties } = useDataContext()
 
@@ -25,12 +30,12 @@ export const Detail: React.FC<{
     const form = useForm<DetailFormDataType>({
       resolver: zodResolver(DetailFormData),
       defaultValues: {
-        description: "",
-        propertyId: ""
+        description: data?.description ?? "",
+        propertyId: data?.propertyId ?? ""
       }
     })
     
-    const { handleSubmit } = useDetailHook(setIsLoading, onClose, form, id)
+    const { handleSubmit } = useDetailHook(setIsLoading, onClose, id)
 
     return (
       <>

@@ -12,27 +12,33 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@
 import { ImageFormData, type ImageFormDataType } from "./schema/schema-property"
 import { useForm } from "react-hook-form"
 import { useDataContext } from "@/app/dashboard/context/use-data"
-import ImageNext from "next/image"
+import Image from "next/image"
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
-export const Image: React.FC<{
+export const Picture: React.FC<{
   onClose: () => void;
   id?: string;
-}> = ({ onClose, id }) => {
+  data?: {
+    propertyId: string;
+    description: string;
+    idDrive: string;
+  }
+}> = ({ onClose, id, data }) => {
   const form = useForm<ImageFormDataType>({
     resolver: zodResolver(ImageFormData),
     defaultValues: {
-      propertyId: "",
-      description: "",
+      propertyId: data?.propertyId ?? "",
+      description: data?.description ?? "",
       file: undefined,
     },
   })
 
+  const [imageIsLoading, setImageIsLoading] = useState<boolean>(false)
   const [imagePreview, setImagePreview] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { properties } = useDataContext()
   const fileInputRef = useRef<HTMLInputElement | null>(null)
-  const { handleSubmit, handleImageUpload, removeImage } = useImageHook(form, setImagePreview, fileInputRef, onClose, setIsLoading, id)
+  const { handleSubmit, handleImageUpload, removeImage } = useImageHook(form, setImagePreview, fileInputRef, onClose, setIsLoading, setImageIsLoading, id, data?.idDrive)
 
   return (
     <>
@@ -106,39 +112,42 @@ export const Image: React.FC<{
                         className="relative flex h-48 w-full items-center justify-center rounded-lg border-2 border-dashed border-gray-300 hover:border-blue-400 transition-colors cursor-pointer bg-gray-50/50"
                         onClick={() => fileInputRef.current?.click()}
                       >
-                        {imagePreview ? (
-                          <div className="relative h-full w-full group">
-                            <ImageNext
-                              src={imagePreview}
-                              alt="Preview da imagem"
-                              fill
-                              className="object-contain rounded-lg p-2"
-                            />
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
-                              <Button
-                                type="button"
-                                variant="secondary"
-                                size="sm"
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  removeImage()
-                                }}
-                                className="bg-white/90 hover:bg-white text-gray-700 cursor-pointer"
-                              >
-                                <X className="h-4 w-4 mr-1" />
-                                Remover
-                              </Button>
+                        {
+                          imageIsLoading ? (
+                            <Loader2 className="animate-spin h-10 w-10" />
+                          ) : imagePreview ? (
+                            <div className="relative h-full w-full group">
+                              <Image
+                                src={imagePreview}
+                                alt="Preview da imagem"
+                                fill
+                                className="object-contain rounded-lg p-2"
+                              />
+                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+                                <Button
+                                  type="button"
+                                  variant="secondary"
+                                  size="sm"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    removeImage()
+                                  }}
+                                  className="bg-white/90 hover:bg-white text-gray-700 cursor-pointer"
+                                >
+                                  <X className="h-4 w-4 mr-1" />
+                                  Remover
+                                </Button>
+                              </div>
                             </div>
-                          </div>
-                        ) : (
-                          <div className="flex flex-col items-center justify-center text-center p-6">
-                            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                              <Upload className="h-8 w-8 text-blue-500" />
+                          ) : (
+                            <div className="flex flex-col items-center justify-center text-center p-6">
+                              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                                <Upload className="h-8 w-8 text-blue-500" />
+                              </div>
+                              <p className="text-sm font-medium text-gray-700 mb-1">Clique para fazer upload</p>
+                              <p className="text-xs text-gray-500">PNG, JPG ou JPEG até 10MB</p>
                             </div>
-                            <p className="text-sm font-medium text-gray-700 mb-1">Clique para fazer upload</p>
-                            <p className="text-xs text-gray-500">PNG, JPG ou JPEG até 10MB</p>
-                          </div>
-                        )}
+                          )}
                       </div>
 
                       <Input

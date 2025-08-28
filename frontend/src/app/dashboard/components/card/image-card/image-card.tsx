@@ -11,7 +11,7 @@ import { ImageService } from "@/../services/image.service"
 import type { ImageReturn } from "@/../types/image"
 import { PropertyService } from "@/../services/property.service"
 import type { ImageProperty } from "@/../types/image-property"
-import { Image } from "../../dialog/image/image"
+import { Picture } from "../../dialog/picture/picture"
 import ImageNext from "next/image"
 import {
   AlertDialog,
@@ -71,6 +71,7 @@ export const ImageCard = () => {
               propertyName: property.name,
               idDrive: image.idDrive,
               description: image.description,
+              propertyId: property.id
             }
           })
           .filter((item): item is ImageProperty => item !== null)
@@ -110,7 +111,7 @@ export const ImageCard = () => {
             <Button className="cursor-pointer">Criar novo</Button>
           </DialogTrigger>
           <DialogContent>
-            <Image onClose={() => setIsCreating(false)} />
+            <Picture onClose={() => setIsCreating(false)} />
           </DialogContent>
         </Dialog>
       </div>
@@ -171,7 +172,13 @@ export const ImageCard = () => {
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
-                    <Image onClose={() => setSelectedImageId(null)} id={image.id} />
+                    <Picture onClose={() => setSelectedImageId(null)} id={image.id}
+                      data={{
+                        description: image.description,
+                        idDrive: image.idDrive,
+                        propertyId: image.propertyId
+                      }}
+                    />
                   </DialogContent>
                 </Dialog>
 

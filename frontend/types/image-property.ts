@@ -3,4 +3,5 @@ export type ImageProperty = {
   propertyName: string;
   description: string;
   idDrive: string;
+  propertyId: string;
 }

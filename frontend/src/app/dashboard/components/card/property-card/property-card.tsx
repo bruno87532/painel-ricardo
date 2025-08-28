@@ -114,7 +114,11 @@ export const PropertyCard = () => {
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
-                    <Property id={property.id} onClose={() => setSelectedPropertyId(null)} />
+                    <Property id={property.id} onClose={() => setSelectedPropertyId(null)} data={{
+                      name: property.name,
+                      baseCapacity: property.baseCapacity,
+                      maxCapacity: property.maxCapacity
+                    }} />
                   </DialogContent>
                 </Dialog>
 

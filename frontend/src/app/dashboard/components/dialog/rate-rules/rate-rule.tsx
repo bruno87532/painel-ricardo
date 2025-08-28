@@ -28,10 +28,21 @@ const daysOfWeek: { value: WeekDays; label: string }[] = [
 
 export const RateRules: React.FC<{
   id?: string,
-  onClose: () => void
+  onClose: () => void,
+  data?: {
+    days: WeekDays[],
+    endDate: Date | undefined,
+    startDate: Date | undefined,
+    maxGuests: number,
+    minGuests: number,
+    pricePerNightCents: string,
+    minNights: number,
+    propertyId: string,
+  }
 }> = ({
   id,
-  onClose
+  onClose,
+  data
 }) => {
     const [isLoading, setIsLoading] = useState(false)
     const { properties } = useDataContext()
@@ -39,14 +50,14 @@ export const RateRules: React.FC<{
     const form = useForm<RateRuleFormDataType>({
       resolver: zodResolver(RateRuleFormData),
       defaultValues: {
-        propertyId: "",
-        startDate: undefined,
-        endDate: undefined,
-        days: [],
-        minGuests: 1,
-        maxGuests: 1,
-        pricePerNightCents: "00.00",
-        minNights: 1,
+        propertyId: data?.propertyId ?? "",
+        startDate: data?.startDate ? new Date(data.startDate) : undefined,
+        endDate: data?.endDate ? new Date(data.endDate) : undefined,
+        days: data?.days ?? [],
+        minGuests: data?.minGuests ?? 1,
+        maxGuests: data?.maxGuests ?? 1,
+        pricePerNightCents: data?.pricePerNightCents ? maskPrice(data.pricePerNightCents) : "00.00",
+        minNights: data?.minNights ?? 1,
       },
     })
 

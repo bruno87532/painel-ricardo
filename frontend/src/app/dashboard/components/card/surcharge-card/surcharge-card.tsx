@@ -115,6 +115,8 @@ export const SurchargeCard = () => {
             id: surcharge.id,
             propertyName: property.name,
             surchargeName: surchargeType.name,
+            propertyId: property.id,
+            surchargeTypeId: surchargeType.id
           }
         }).filter((item) => item !== null)
 
@@ -227,7 +229,17 @@ export const SurchargeCard = () => {
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
-                    <SurchargeComponent onClose={() => setSelectedSurchargeId(null)} id={surcharge.id} />
+                    <SurchargeComponent onClose={() => setSelectedSurchargeId(null)} id={surcharge.id}
+                      data={{
+                        amountCents: surcharge.amountCents,
+                        appliesPerNight: surcharge.appliesPerNight,
+                        days: surcharge.days,
+                        endDate: surcharge.endDate ? new Date(surcharge.endDate) : undefined,
+                        startDate: surcharge.startDate ? new Date(surcharge.startDate) : undefined,
+                        propertyId: surcharge.propertyId,
+                        surchargeTypeId: surcharge.surchargeTypeId
+                      }}
+                    />
                   </DialogContent>
                 </Dialog>
                 <AlertDialog>

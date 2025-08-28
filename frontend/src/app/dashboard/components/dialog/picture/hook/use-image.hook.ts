@@ -15,7 +15,9 @@ export const useImageHook = (
   fileInputRef: React.RefObject<HTMLInputElement | null>,
   onClose: () => void,
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  setImageIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
   id?: string,
+  idDrive?: string
 ) => {
   const { setProperties, setImages, properties } = useDataContext()
 
@@ -30,19 +32,16 @@ export const useImageHook = (
 
   useEffect(() => {
     const getImage = async () => {
-      if (id) {
-        const data = await ImageService.getImageById(id)
-        const file = await GoogleDriveService.getImageFromGoogleDrive(data.image.idDrive)
+      if (id && idDrive) {
+        setImageIsLoading(true)
+        const file = await GoogleDriveService.getImageFromGoogleDrive(idDrive)
         const reader = new FileReader()
         reader.onloadend = () => {
           setImagePreview(reader.result as string)
         }
         reader.readAsDataURL(file)
-        form.reset({
-          description: data.image.description,
-          propertyId: data.image.propertyId,
-          file
-        })
+        form.setValue("file", file)
+        setImageIsLoading(false)
       }
     }
 
@@ -68,7 +67,8 @@ export const useImageHook = (
         id: dataDb.image.id,
         propertyName: property.name,
         description,
-        idDrive
+        idDrive,
+        propertyId: property.id
       }
 
       return [

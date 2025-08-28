@@ -9,4 +9,6 @@ export type SurchargeProperty = {
   endDate: string;
   amountCents: string;
   appliesPerNight: boolean;
+  propertyId: string;
+  surchargeTypeId: string;
 }

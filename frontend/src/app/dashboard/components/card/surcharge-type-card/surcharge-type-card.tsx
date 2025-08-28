@@ -42,7 +42,7 @@ export const SurchargeTypeCard = () => {
     }
 
     handleData()
-  }, [currentPage])
+  }, [currentPage, setSurchargeTypes])
 
   if (surchargeTypes.length === 0) {
     return (
@@ -109,7 +109,11 @@ export const SurchargeTypeCard = () => {
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
-                    <SurchargeType id={surchargeType.id} onClose={() => setSelectedSurchargeTypeId(null)} />
+                    <SurchargeType id={surchargeType.id} onClose={() => setSelectedSurchargeTypeId(null)}
+                      data={{
+                        name: surchargeType.name
+                      }}
+                    />
                   </DialogContent>
                 </Dialog>
                 <AlertDialog>

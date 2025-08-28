@@ -108,6 +108,7 @@ export const RateRuleCard = () => {
               maxGuests: rateRule.maxGuests,
               minNights: rateRule.minNights,
               pricePerNightCents: makePrice(rateRule.pricePerNightCents),
+              propertyId: property.id
             }
           })
           .filter((item) => item !== null)
@@ -213,7 +214,16 @@ export const RateRuleCard = () => {
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
-                    <RateRules onClose={() => setSelectedRateRuleId(null)} id={rule.id} />
+                    <RateRules data={{
+                      days: rule.days,
+                      endDate: rule.endDate ? new Date(rule.endDate) : undefined,
+                      startDate: rule.startDate ? new Date(rule.startDate) : undefined,
+                      maxGuests: rule.maxGuests,
+                      minGuests: rule.minGuests,
+                      pricePerNightCents: rule.pricePerNightCents,
+                      minNights: rule.minNights,
+                      propertyId: rule.propertyId
+                    }} onClose={() => setSelectedRateRuleId(null)} id={rule.id} />
                   </DialogContent>
                 </Dialog>
                 <AlertDialog>

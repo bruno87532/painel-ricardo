@@ -12,24 +12,9 @@ import { UseFormReturn } from "react-hook-form"
 export const useDetailHook = (
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
   onClose: () => void,
-  form: UseFormReturn<DetailFormDataType>,
   id?: string
 ) => {
   const { setDetails, setProperties, properties } = useDataContext()
-
-  useEffect(() => {
-    const getDetailById = async () => {
-      if (id) {
-        const data = await DetailService.getDetailById(id)
-        form.reset({
-          description: data.detail.description,
-          propertyId: data.detail.propertyId
-        })
-      }
-    }
-
-    getDetailById()
-  }, [form, id])
 
   useEffect(() => {
     const getProperties = async () => {

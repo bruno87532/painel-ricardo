@@ -14,17 +14,23 @@ import { zodResolver } from "@hookform/resolvers/zod"
 
 export const Property: React.FC<{
   id?: string,
-  onClose: () => void
+  onClose: () => void,
+  data?: {
+    baseCapacity: number,
+    maxCapacity: number,
+    name: string
+  }
 }> = ({
   id,
-  onClose
+  onClose,
+  data
 }) => {
     const form = useForm<PropertyFormData>({
       resolver: zodResolver(propertySchema),
       defaultValues: {
-        baseCapacity: 1,
-        maxCapacity: 1,
-        name: ""
+        baseCapacity: data?.baseCapacity ?? 1,
+        maxCapacity: data?.maxCapacity ?? 1,
+        name: data?.name ?? ""
       }
     })
 

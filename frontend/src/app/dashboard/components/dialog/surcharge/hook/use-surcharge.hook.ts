@@ -7,13 +7,11 @@ import { SurchargeTypeService } from "@/../services/surcharge-type.service"
 import { SurchargeFormDataType } from "../schema/schema-surcharge"
 import { SurchargeService } from "@/../services/surcharge.service"
 import { toast } from "sonner"
-import { UseFormReturn } from "react-hook-form"
 import { makePrice } from "@/../common/functions/make-price"
 
 export const useSurchargeHook = (
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
   onClose: () => void,
-  form: UseFormReturn<SurchargeFormDataType>,
   id?: string
 ) => {
   const { setProperties, setSurchargeTypes, setSurcharges, properties, surchargeTypes } = useDataContext()
@@ -32,26 +30,6 @@ export const useSurchargeHook = (
     getProperties()
     getSurchargeTypes()
   }, [setProperties, setSurchargeTypes])
-
-  useEffect(() => {
-    const getSurchargeById = async () => {
-      if (id) {
-        const data = await SurchargeService.getSurchargeById(id)
-        const { amountCents, appliesPerNight, days, propertyId, endDate, startDate, surchargeTypeId } = data.surcharge
-        form.reset({
-          appliesPerNight,
-          days,
-          propertyId,
-          surchargeTypeId,
-          ...(startDate ? { startDate: new Date(startDate) } : {}),
-          ...(endDate ? { endDate: new Date(endDate) } : {}),
-          amountCents: makePrice(amountCents)
-        })
-      }
-    }
-
-    getSurchargeById()
-  }, [id, form])
 
   const handleSubmit = async (data: SurchargeFormDataType) => {
     setIsLoading(true)

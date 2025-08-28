@@ -10,5 +10,6 @@ export type RuleProperty = {
   days: WeekDays[];
   startDate: string;
   endDate: string;
+  propertyId: string;
 }
 

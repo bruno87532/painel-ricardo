@@ -17,8 +17,8 @@ import { Surcharge } from "./components/dialog/surcharge/surcharge"
 import { SurchargeType } from "./components/dialog/surcharge-type/surcharge-type"
 import { DetailCard } from "./components/card/detail-card/detail-card"
 import { Detail } from "./components/dialog/detail/detail"
-import { Image } from "./components/dialog/image/image"
 import { ImageCard } from "./components/card/image-card/image-card"
+import { Picture } from "./components/dialog/picture/picture"
 
 const PricingDashboard = () => {
   const [activeTab, setActiveTab] = useState<TabType>("properties")
@@ -108,7 +108,7 @@ const PricingDashboard = () => {
                 {activeTab === "taxes" && <Surcharge onClose={() => setIsOpen(false)} />}
                 {activeTab === "new-taxes" && <SurchargeType onClose={() => setIsOpen(false)} />}
                 {activeTab === "details" && <Detail onClose={() => setIsOpen(false)} />}
-                {activeTab === "image" && <Image onClose={() => setIsOpen(false)} />}
+                {activeTab === "image" && <Picture onClose={() => setIsOpen(false)} />}
               </DialogContent>
             </Dialog>
           </div>

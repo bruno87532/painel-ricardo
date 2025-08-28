@@ -14,29 +14,25 @@ import { useSurchargeTypeHook } from "./hook/use-surcharge-type.hook"
 
 export const SurchargeType: React.FC<{
   id?: string,
-  onClose: () => void
+  onClose: () => void,
+  data?: {
+    name: string
+  } 
 }> = ({
   id,
-  onClose
+  onClose,
+  data
 }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const form = useForm<SurchargeTypeFormDataType>({
       resolver: zodResolver(SurchargeTypeFormData),
       defaultValues: {
-        name: ""
+        name: data?.name ?? ""
       }
     })
 
     const { handleSubmit } = useSurchargeTypeHook(onClose, setIsLoading, form, id)
-
-    if (id) {
-      return (
-        <div className="min-h-screen flex justify-center items-center">
-          <Loader2 className="h-15 w-15 animate-spin" />
-        </div>
-      )
-    }
 
     return (
       <>

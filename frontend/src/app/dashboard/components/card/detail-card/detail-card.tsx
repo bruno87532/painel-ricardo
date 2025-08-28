@@ -58,7 +58,8 @@ export const DetailCard = () => {
           return {
             description: detail.description,
             id: detail.id,
-            propertyName: property.name
+            propertyName: property.name,
+            propertyId: property.id
           }
         }).filter((item) => !!item)
 
@@ -144,7 +145,12 @@ export const DetailCard = () => {
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
-                    <DetailComponent onClose={() => setSelectedDetailId(null)} id={detail.id} />
+                    <DetailComponent onClose={() => setSelectedDetailId(null)} id={detail.id}
+                    data={{
+                      description: detail.description,
+                      propertyId: detail.propertyId
+                    }}
+                    />
                   </DialogContent>
                 </Dialog>
                 <AlertDialog>

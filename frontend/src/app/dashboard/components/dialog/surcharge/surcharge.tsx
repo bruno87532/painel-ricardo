@@ -31,10 +31,20 @@ const daysOfWeek: {
 
 export const Surcharge: React.FC<{
   id?: string
-  onClose: () => void
+  onClose: () => void,
+  data?: {
+    propertyId: string,
+    startDate: Date | undefined,
+    endDate: Date | undefined,
+    amountCents: string,
+    days: WeekDays[],
+    appliesPerNight: boolean,
+    surchargeTypeId: string,
+  }
 }> = ({
   id,
-  onClose
+  onClose,
+  data
 }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const { properties, surchargeTypes } = useDataContext()
@@ -42,16 +52,17 @@ export const Surcharge: React.FC<{
     const form = useForm<SurchargeFormDataType>({
       resolver: zodResolver(SurchargeFormData),
       defaultValues: {
-        propertyId: "",
-        startDate: undefined,
-        endDate: undefined,
-        amountCents: "00.00",
-        days: [],
-        appliesPerNight: false,
+        propertyId: data?.propertyId ?? "",
+        startDate: data?.startDate ? new Date(data.startDate) : undefined,
+        endDate: data?.endDate ? new Date(data.endDate) : undefined,
+        amountCents: data?.amountCents ? maskPrice(data.amountCents) : "00.00",
+        days: data?.days ?? [],
+        appliesPerNight: data?.appliesPerNight ?? false,
+        surchargeTypeId: data?.surchargeTypeId ?? ""
       },
     })
 
-    const { handleSubmit } = useSurchargeHook(setIsLoading, onClose, form, id)
+    const { handleSubmit } = useSurchargeHook(setIsLoading, onClose, id)
     if (properties.length === 0 || surchargeTypes.length === 0) {
       return (
         <div className="min-h-screen flex justify-center items-center">

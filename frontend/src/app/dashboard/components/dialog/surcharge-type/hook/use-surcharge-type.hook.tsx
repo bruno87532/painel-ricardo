@@ -14,20 +14,6 @@ export const useSurchargeTypeHook = (
   id?: string,
 ) => {
 
-  useEffect(() => {
-    const getSurchargeTypeById = async () => {
-      if (id) {
-        const data = await SurchargeTypeService.getSurchargeTypeById(id)
-        form.reset({
-          name: data.surchargeType.name
-        })
-      }
-    }
-
-    getSurchargeTypeById()
-  }, [id, form])
-
-  
   const { setSurchargeTypes, surchargeTypes } = useDataContext()
   
   useEffect(() => {

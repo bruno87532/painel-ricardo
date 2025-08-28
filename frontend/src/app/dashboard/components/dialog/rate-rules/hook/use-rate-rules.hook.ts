@@ -19,28 +19,6 @@ export const useRateRulesHook = (
   const { setProperties, setRules, properties } = useDataContext()
 
   useEffect(() => {
-    const getRateRuleById = async () => {
-      if (id) {
-        const data = await RateRuleService.getRateRuleById(id)
-        const { propertyId, startDate, endDate, days, minGuests, maxGuests, pricePerNightCents, minNights } = data.rateRule
-
-        form.reset({
-          propertyId,
-          days,
-          minGuests,
-          maxGuests,
-          minNights,
-          ...(startDate ? { startDate: new Date(startDate) } : {}),
-          ...(endDate ? { endDate: new Date(endDate) } : {}),
-          pricePerNightCents: makePrice(pricePerNightCents),
-        })
-      }
-    }
-
-    getRateRuleById()
-  }, [id, form])
-
-  useEffect(() => {
     const getProperties = async () => {
       const data = await PropertyService.getProperties()
       setProperties(data.properties)

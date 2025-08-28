@@ -1,5 +1,5 @@
 import { PropertyService } from "@/../services/property.service"
-import React, { useEffect } from "react"
+import React from "react"
 import { PropertyFormData } from "../schema/schema-property"
 import { useDataContext } from "@/app/dashboard/context/use-data"
 import { toast } from "sonner"
@@ -12,21 +12,6 @@ export const usePropertyHook = (
   id?: string,
 ) => {
   const { setProperties } = useDataContext()
-
-  useEffect(() => {
-    const getProperty = async () => {
-      if (id) {
-        const data = await PropertyService.getPropertyById(id)
-
-        form.reset({
-          name: data.property.name,
-          baseCapacity: data.property.baseCapacity,
-        });
-      }
-    }
-
-    getProperty()
-  }, [id, form])
 
   const handleSubmit = async (data: PropertyFormData) => {
     setIsLoading(true)
